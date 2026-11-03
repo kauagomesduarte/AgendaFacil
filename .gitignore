@@ -1,0 +1,6 @@
+backend/.postman/
+backend/postman/
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/generated/prisma
