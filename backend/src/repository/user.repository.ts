@@ -14,6 +14,15 @@ export async function findById(userId: number): Promise<User | null> {
     });
 }
 
+export async function findByEmail(email: string): Promise<User | null> {
+    return await prisma.user.findUnique({
+        where: {
+            email : email
+        }
+    });
+}
+
+
 export async function updateUserById(userId: number, newData: Prisma.UserUpdateInput): Promise<User>{
     const newUser = await prisma.user.update({
         where:{
