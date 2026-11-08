@@ -4,14 +4,17 @@ import TipoUsuario from '../components/TipoUsuario';
 import { Link } from 'react-router-dom';
 
 export default function Cadastro() {
-  // Estado para armazenar a lista de cidades que virá do IBGE
   const [cidades, setCidades] = useState([]);
 
-  // Puxa os dados da API do IBGE assim que a tela abre
   useEffect(() => {
     fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome')
       .then((resposta) => resposta.json())
-      .then((dados) => setCidades(dados))
+      .then((dados) => {
+        // Blindagem 1: Verifica se o que a API enviou é realmente uma lista antes de salvar
+        if (Array.isArray(dados)) {
+          setCidades(dados);
+        }
+      })
       .catch((erro) => console.error("Erro ao carregar cidades:", erro));
   }, []);
 
@@ -23,7 +26,6 @@ export default function Cadastro() {
       </header>
 
       <main>
-        {/* Adicionei o paddingBottom aqui para dar o respiro extra na borda de baixo */}
         <div className="container" style={{ paddingBottom: '40px' }}>
           <h2>Cadastro</h2>
           <p className="subtitulo">Escolha o tipo de conta para começar</p>
@@ -34,19 +36,19 @@ export default function Cadastro() {
           <input type="password" placeholder="Senha" />
           <input type="password" placeholder="Confirmar Senha" />
           
-          <select className="w-[300px] h-[40px] border-b border-[rgba(102,102,102,0.185)] outline-none text-gray-500 bg-transparent mt-2">
-              <option value="" disabled selected>Tipo De Estabelecimento</option>
+          {/* Blindagem 2: Usar defaultValue no select em vez de selected no option */}
+          <select defaultValue="" className="w-[300px] h-[40px] border-b border-[rgba(102,102,102,0.185)] outline-none text-gray-500 bg-transparent mt-2">
+              <option value="" disabled>Tipo De Estabelecimento</option>
               <option value="barbearia">Barbearia</option>
               <option value="clinica">Clínica</option>
           </select>
 
-          {/* Select de Cidades alimentado pela API do IBGE */}
-          <select className="w-[300px] h-[40px] border-b border-[rgba(102,102,102,0.185)] outline-none text-gray-500 bg-transparent mt-2">
-              <option value="" disabled selected>Cidade</option>
-              {cidades.map((cidade) => (
+          {/* Blindagem 3: Usar "?." (Optional Chaining) para não quebrar caso a API mude a estrutura */}
+          <select defaultValue="" className="w-[300px] h-[40px] border-b border-[rgba(102,102,102,0.185)] outline-none text-gray-500 bg-transparent mt-2">
+              <option value="" disabled>Cidade</option>
+              {cidades?.map((cidade) => (
                 <option key={cidade.id} value={cidade.nome}>
-                  {/* Puxa o nome da cidade e a sigla do Estado (ex: Imperatriz - MA) */}
-                  {cidade.nome} - {cidade.microrregiao.mesorregiao.UF.sigla}
+                  {cidade.nome} - {cidade?.microrregiao?.mesorregiao?.UF?.sigla || 'BR'}
                 </option>
               ))}
           </select>
