@@ -1,12 +1,12 @@
 import express from "express";
 import router from "./routes/index.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-// Middleware para interpretar JSON no corpo das requisições
+//cookieParser tem que ficar antes
+app.use(cookieParser());
 app.use(express.json());
-
-// Registra as rotas de usuários
 app.use(router);
 
 export default app;
