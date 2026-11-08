@@ -14,5 +14,5 @@ export function createJWT(payload: jwt.JwtPayload): string{
 }
 
 export function validateJWT(token: string){
-    return jwt.verify(token, secret)
+    return jwt.verify(token, secret);
 }
