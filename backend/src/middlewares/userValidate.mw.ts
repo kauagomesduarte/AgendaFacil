@@ -1,7 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import type { CreateUserDTO } from "../dtos/user.dto.js";
-import z from 'zod';
-import { createUserSchema, updateUserSchema } from "../dtos/user.dto.js";
+import { createUserSchema, updateUserSchema, type CreateUserDTO, type UpdateUserDTO } from "../dtos/user.dto.js";
 
 export function validateCreateUser(
     req: Request,
@@ -17,7 +15,9 @@ export function validateCreateUser(
     });
     }
 
-    req.body = validator.data;
+    const data: CreateUserDTO = validator.data
+
+    req.body = data;
 
     next();
 }
@@ -36,7 +36,9 @@ export function validateUpdateUser(
     });
     }
 
-    req.body = validator.data;
+    const data: UpdateUserDTO = validator.data
+
+    req.body = data;
 
     next();
 }

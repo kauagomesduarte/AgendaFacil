@@ -1,3 +1,5 @@
+postman/
+.postman/
 backend/.postman/
 backend/postman/
 backend/node_modules/
