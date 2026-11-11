@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 import Botao from '../components/Botao';
 import '../CSS/login.css';
 
-export default function App(){
+export default function Login(){
   return(
     <>
       <header>
-        <h1>AgendaFacil</h1>
+        <h1><Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>AgendaFácil</Link></h1>
         <Link to="/cadastro">Cadastro</Link>
       </header>
       <main>

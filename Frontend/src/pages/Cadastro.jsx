@@ -22,7 +22,7 @@ export default function Cadastro() {
     <>
       <header>
         <h1>AgendaFacil</h1>
-        <Link to="/">Voltar para o Login</Link>
+        <Link to="/login">Voltar para o Login</Link>
       </header>
 
       <main>
@@ -67,7 +67,7 @@ export default function Cadastro() {
           <Botao texto="Cadastrar"/>
 
           <p style={{ fontSize: '12px', marginTop: '15px', fontWeight: 'bold', textAlign: 'center' }}>
-            Já Possui Uma Conta? <Link to="/" style={{ color: '#2563EB', textDecoration: 'none' }}>Entrar</Link>
+            Já Possui Uma Conta? <Link to="/login" style={{ color: '#2563EB', textDecoration: 'none' }}>Entrar</Link>
           </p>
         </div>
       </main>
