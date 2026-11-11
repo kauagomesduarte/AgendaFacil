@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Botao from '../components/Botao';
 import TipoUsuario from '../components/TipoUsuario';
-import { Link } from 'react-router-dom';
 
 export default function Cadastro() {
   const [cidades, setCidades] = useState([]);
@@ -10,7 +10,6 @@ export default function Cadastro() {
     fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome')
       .then((resposta) => resposta.json())
       .then((dados) => {
-        // Blindagem 1: Verifica se o que a API enviou é realmente uma lista antes de salvar
         if (Array.isArray(dados)) {
           setCidades(dados);
         }
@@ -19,58 +18,88 @@ export default function Cadastro() {
   }, []);
 
   return (
-    <>
-      <header>
-        <h1>AgendaFacil</h1>
-        <Link to="/login">Voltar para o Login</Link>
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
+      <header className="h-16 px-6 md:px-12 flex items-center justify-between border-b border-slate-200 bg-white">
+        <h1 className="font-black text-xl tracking-tight">
+          <Link to="/">AgendaFácil</Link>
+        </h1>
+        <Link to="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+          Voltar para o Login
+        </Link>
       </header>
 
-      <main>
-        <div className="container" style={{ paddingBottom: '40px' }}>
-          <h2>Cadastro</h2>
-          <p className="subtitulo">Escolha o tipo de conta para começar</p>
+      <main className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white border border-slate-100 shadow-xl shadow-slate-200/50 rounded-2xl p-8 flex flex-col my-8">
+          <h2 className="text-3xl font-black mb-1 text-slate-900">Cadastro</h2>
+          <p className="text-sm text-slate-500 mb-6">Escolha o tipo de conta para começar</p>
 
-          <TipoUsuario />
-          <input type="text" placeholder="Nome da Empresa" />
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Senha" />
-          <input type="password" placeholder="Confirmar Senha" />
-          
-          {/* Blindagem 2: Usar defaultValue no select em vez de selected no option */}
-          <select defaultValue="" className="w-[300px] h-[40px] border-b border-[rgba(102,102,102,0.185)] outline-none text-gray-500 bg-transparent mt-2">
-              <option value="" disabled>Tipo De Estabelecimento</option>
+          <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+            <TipoUsuario />
+            
+            <input 
+              type="text" 
+              placeholder="Nome da Empresa" 
+              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+            />
+            <input 
+              type="email" 
+              placeholder="Email" 
+              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+            />
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <input 
+                type="password" 
+                placeholder="Senha" 
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+              />
+              <input 
+                type="password" 
+                placeholder="Confirmar" 
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+              />
+            </div>
+            
+            <select 
+              defaultValue="" 
+              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm text-slate-500 cursor-pointer"
+            >
+              <option value="" disabled>Tipo de Estabelecimento</option>
               <option value="barbearia">Barbearia</option>
               <option value="clinica">Clínica</option>
-          </select>
+            </select>
 
-          {/* Blindagem 3: Usar "?." (Optional Chaining) para não quebrar caso a API mude a estrutura */}
-          <select defaultValue="" className="w-[300px] h-[40px] border-b border-[rgba(102,102,102,0.185)] outline-none text-gray-500 bg-transparent mt-2">
+            <select 
+              defaultValue="" 
+              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm text-slate-500 cursor-pointer"
+            >
               <option value="" disabled>Cidade</option>
               {cidades?.map((cidade) => (
                 <option key={cidade.id} value={cidade.nome}>
                   {cidade.nome} - {cidade?.microrregiao?.mesorregiao?.UF?.sigla || 'BR'}
                 </option>
               ))}
-          </select>
+            </select>
 
-          <div className="w-[300px] mt-4 mb-2" style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px', alignItems: 'center' }}>
-            <input 
-              type="checkbox" 
-              id="termos" 
-              style={{ width: '16px', height: '16px', margin: '0', cursor: 'pointer' }}
-            />
-            <label htmlFor="termos" style={{ fontSize: '11px', color: '#4b5563', cursor: 'pointer', lineHeight: '1.2' }}>
-              Li E Aceito Os Termos E A Política De Privacidade
-            </label>
-          </div>
-          
-          <Botao texto="Cadastrar"/>
+            <div className="flex items-center gap-2 mt-2">
+              <input 
+                type="checkbox" 
+                id="termos" 
+                className="w-4 h-4 text-blue-600 bg-slate-50 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+              />
+              <label htmlFor="termos" className="text-xs text-slate-600 cursor-pointer select-none">
+                Li e aceito os Termos e a Política de Privacidade
+              </label>
+            </div>
+            
+            <Botao texto="Cadastrar" />
+          </form>
 
-          <p style={{ fontSize: '12px', marginTop: '15px', fontWeight: 'bold', textAlign: 'center' }}>
-            Já Possui Uma Conta? <Link to="/login" style={{ color: '#2563EB', textDecoration: 'none' }}>Entrar</Link>
+          <p className="text-sm text-slate-600 text-center mt-6">
+            Já possui uma conta? <Link to="/login" className="text-blue-600 font-semibold hover:underline">Entrar</Link>
           </p>
         </div>
       </main>
-    </>
+    </div>
   );
 }
