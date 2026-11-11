@@ -1,12 +1,18 @@
 import * as userRepository from "../repository/user.repository.js";
 import type { UpdateUserDTO, UserDTO } from "../dtos/user.dto.js";
 import type { User } from "../../generated/prisma/browser.js";
+import bcrypt from 'bcrypt';
+
 
  
 export async function createUser(data: UserDTO){
     if(!data){throw new Error("Invalid data.");}
-
-    await userRepository.createUser(data);
+    const newPassword = await bcrypt.hash(data.password, 12)
+    const newData = {
+        ...data,
+        password: newPassword
+    }
+    await userRepository.createUser(newData);
 }
 
 export async function findById(userId: number){

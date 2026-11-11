@@ -1,6 +1,7 @@
 import * as userService from "../services/user.service.js";
 import type {UpdateUserDTO, UserDTO} from "../dtos/user.dto.js";
 import type { Request, Response } from "express";
+import z from 'zod';
 
 export async function createUser(req: Request, res: Response){
     const data: UserDTO = req.body;

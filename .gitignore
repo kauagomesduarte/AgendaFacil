@@ -1,3 +1,8 @@
+.postman/
+postman/
+node_modules/
+dist/
+.env
 backend/.postman/
 backend/postman/
 backend/node_modules/
