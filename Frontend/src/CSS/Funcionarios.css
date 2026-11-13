@@ -14,10 +14,10 @@
 
 .cartao-funcionarios {
   background-color: #FFFFFF;
-  border-radius: 16px;
+  border-radius: 12px;
   width: 100%;
   max-width: 100%;
-  padding: 40px 48px;
+  padding: 24px 32px;
   border: 1px solid #EAEAEA;
 }
 
@@ -26,12 +26,12 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 35px;
+  margin-bottom: 24px;
 }
 
 .cabecalho-tabela h2 {
-  font-size: 34px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   color: #1A1A1A;
   margin: 0;
   line-height: 1;
@@ -39,53 +39,54 @@
 
 .acoes-cabecalho {
   display: flex;
-  align-items: stretch;
-  gap: 12px;
+  gap: 10px;
+  align-items: center; 
 }
 
-.input-pesquisa,
-.btn-filtro,
-.btn-icone {
-  height: 45px;
-  margin: 0;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-/* Barra de pesquisa (sem display flex para preservar o campo de texto) */
 .input-pesquisa {
+  height: 38px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  border-radius: 8px;
-  background-color: #E6E6E6;
-  font-size: 15px;
-  width: 280px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: 1px solid #EAEAEA;
+  background-color: #F3F4F6;
+  font-size: 14px;
+  width: 240px;
   outline: none;
-  border: none;
+  box-sizing: border-box;
+  line-height: normal;
 }
 
-/* Botões com alinhamento flexível */
 .btn-filtro {
-  padding: 0 24px;
+  height: 38px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 18px;
+  border-radius: 6px;
+  border: 1px solid #EAEAEA;
+  background-color: #F3F4F6;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
 }
 
 .btn-icone {
-  width: 45px;
-  height: 45px;
+  height: 38px;
+  width: 38px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border-radius: 8px;
-  border: none;
-  background-color: #E6E6E6;
-  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #EAEAEA;
+  background-color: #F3F4F6;
+  font-size: 14px;
   cursor: pointer;
-  box-sizing: border-box;
 }
 
 .tabela-funcionarios {
@@ -95,19 +96,19 @@
 
 .tabela-funcionarios th {
   text-align: left;
-  padding: 20px;
+  padding: 14px 16px;
   border-bottom: 1px solid #EAEAEA;
   color: #1A1A1A;
-  font-weight: 800;
-  font-size: 19px;
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .tabela-funcionarios td {
-  padding: 24px 20px;
+  padding: 16px;
   border-bottom: 1px solid #EAEAEA;
-  color: #1A1A1A;
-  font-size: 18px;
-  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .tabela-funcionarios tr:last-child td {
@@ -117,15 +118,15 @@
 .rodape-tabela {
   display: flex;
   justify-content: flex-end;
-  margin-top: 30px;
+  margin-top: 24px;
 }
 
 .btn-salvar {
-  padding: 14px 32px;
+  padding: 10px 24px;
   background-color: #E6E6E6;
   border: none;
-  border-radius: 8px;
-  font-size: 17px;
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
   cursor: pointer;
