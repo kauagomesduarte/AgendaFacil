@@ -4,17 +4,21 @@ import Login from './pages/Login.jsx';
 import Cadastro from './pages/Cadastro.jsx';
 import Servicos from './pages/Servicos.jsx';
 import Funcionarios from './pages/Funcionarios.jsx';
+import Horarios from './pages/Horarios.jsx';
+import MeusHorarios from './pages/MeusHorarios.jsx'; // <--- Importa o COMPONENTE aqui
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Cadastro />} />
-      <Route path="/servicos" element={<Servicos />} />
-      <Route path="/funcionarios" element={<Funcionarios />} />
-    </Routes>
-  </BrowserRouter>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/servicos" element={<Servicos />} />
+        <Route path="/funcionarios" element={<Funcionarios />} />
+        <Route path="/horarios" element={<Horarios />} />
+        <Route path="/meus-horarios" element={<MeusHorarios />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

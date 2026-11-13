@@ -1,0 +1,124 @@
+.servicos-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #F8F9FA;
+  overflow: hidden;
+}
+
+.conteudo-principal {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.card-branco {
+  width: 100%;
+  max-width: 100%;
+  padding: 40px;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.titulo-secao {
+  font-size: 26px;
+  color: #111827;
+  font-weight: 800;
+}
+
+.tabela-servicos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-servicos th {
+  text-align: left;
+  padding: 16px;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+  border-bottom: 2px solid #E2E8F0;
+}
+
+.tabela-servicos td {
+  padding: 20px 16px;
+  color: #1F2937;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+/* Sidebar e Menus */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background-color: #FFFFFF;
+  border-right: 1px solid #E2E8F0;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  padding: 40px 24px 24px 24px;
+  font-size: 34px;
+  font-weight: 800;
+  color: #1A202C;
+}
+
+.menu {
+  list-style: none;
+  flex: 1;
+  padding-top: 20px;
+}
+
+.menu li {
+  padding: 18px 24px;
+  cursor: pointer;
+  color: #4A5568;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.menu li.ativo {
+  background-color: #EBF4FF;
+  color: #3182CE;
+  border-left: 5px solid #3182CE;
+}
+
+.perfil-rodape {
+  padding: 24px;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-empresa strong {
+  color: #2D3748;
+  font-size: 18px;
+}
+
+.info-empresa span {
+  color: #718096;
+  font-size: 16px;
+  display: block;
+}
+
+.btn-sair {
+  background: none;
+  border: none;
+  color: #E53E3E;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+}
