@@ -1,0 +1,122 @@
+/* Layout Geral (Assume que o Sidebar já ocupa a esquerda) */
+.funcionarios-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #2C2C2C; /* Cor de fundo escura do protótipo fora da área branca */
+  padding: 40px;
+}
+
+.conteudo-principal {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Cartão Branco onde fica a tabela */
+.cartao-funcionarios {
+  background-color: #FAFAFA;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1100px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border: 1px solid #E5E5E5;
+}
+
+/* Cabeçalho */
+.cabecalho-tabela {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cabecalho-tabela h2 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+}
+
+.acoes-cabecalho {
+  display: flex;
+  gap: 15px;
+}
+
+.input-pesquisa {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  background-color: #E2E2E2;
+  font-size: 14px;
+  width: 250px;
+}
+
+.btn-filtro {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  background-color: #E2E2E2;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-icone {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tabela */
+.tabela-funcionarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+.tabela-funcionarios th {
+  text-align: left;
+  padding: 15px 10px;
+  border-bottom: 1px solid #E5E5E5;
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.tabela-funcionarios td {
+  padding: 20px 10px;
+  border-bottom: 1px solid #E5E5E5;
+  color: #555;
+  font-size: 14px;
+}
+
+.font-bold {
+  font-weight: 600;
+  color: #333 !important;
+}
+
+/* Rodapé com botão salvar */
+.rodape-tabela {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-salvar {
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  background-color: #D4D4D4;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-salvar:hover {
+  background-color: #C0C0C0;
+}
