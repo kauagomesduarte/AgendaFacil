@@ -1,18 +1,30 @@
 import React from 'react';
-import './Funcionarios.css'; // Lembra-te de criar este ficheiro CSS
+import '../CSS/Funcionarios.css';
+import Sidebar from '../components/Sidebar';
+
 
 const Funcionarios = () => {
   // Dados de exemplo baseados no teu design
-  const listaFuncionarios = [
+const listaFuncionarios = [
     { nome: 'Carlos', email: 'carlos@estilofino.com', servico: 'Corte, Barba', status: 'Ativo' },
     { nome: 'Marina', email: 'marina@estilofino.com', servico: 'Corte e escova, Hidratação', status: 'Ativo' },
     { nome: 'Rafael', email: 'rafael@estilofino.com', servico: 'Corte, Barba, Sobrancelha', status: 'Ativo' },
     { nome: 'Beatriz', email: 'beatriz@estilofino.com', servico: 'Hidratação', status: 'Inativo' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    { nome: '', email: '', servico: '', status: '' },
+    
   ];
-
   return (
     <div className="funcionarios-container">
-      {/* Aqui entraria o teu componente <Sidebar /> se já o tiveres */}
+      <Sidebar />
       
       <main className="conteudo-principal">
         <div className="cartao-funcionarios">
@@ -48,7 +60,9 @@ const Funcionarios = () => {
           </table>
 
           <div className="rodape-tabela">
-            <button className="btn-salvar">Salvar Alterações</button>
+            <div className="rodape-tabela">
+        <button className="btn-salvar">Salvar Alterações</button>
+      </div>
           </div>
 
         </div>
@@ -58,3 +72,4 @@ const Funcionarios = () => {
 };
 
 export default Funcionarios;
+

@@ -1,122 +1,132 @@
-/* Layout Geral (Assume que o Sidebar já ocupa a esquerda) */
 .funcionarios-container {
   display: flex;
   min-height: 100vh;
-  background-color: #2C2C2C; /* Cor de fundo escura do protótipo fora da área branca */
-  padding: 40px;
+  background-color: #F8F9FA;
 }
 
 .conteudo-principal {
   flex: 1;
+  padding: 24px 32px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
-/* Cartão Branco onde fica a tabela */
 .cartao-funcionarios {
-  background-color: #FAFAFA;
-  border-radius: 12px;
+  background-color: #FFFFFF;
+  border-radius: 16px;
   width: 100%;
-  max-width: 1100px;
-  padding: 40px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  border: 1px solid #E5E5E5;
+  max-width: 100%;
+  padding: 40px 48px;
+  border: 1px solid #EAEAEA;
 }
 
-/* Cabeçalho */
 .cabecalho-tabela {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  width: 100%;
+  margin-bottom: 35px;
 }
 
 .cabecalho-tabela h2 {
-  font-size: 24px;
-  color: #333;
+  font-size: 34px;
+  font-weight: 800;
+  color: #1A1A1A;
   margin: 0;
+  line-height: 1;
 }
 
 .acoes-cabecalho {
   display: flex;
-  gap: 15px;
+  align-items: stretch;
+  gap: 12px;
 }
 
-.input-pesquisa {
-  padding: 10px 15px;
-  border-radius: 6px;
-  border: none;
-  background-color: #E2E2E2;
-  font-size: 14px;
-  width: 250px;
-}
-
-.btn-filtro {
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
-  background-color: #E2E2E2;
-  cursor: pointer;
-  font-weight: 500;
-}
-
+.input-pesquisa,
+.btn-filtro,
 .btn-icone {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: transparent;
-  cursor: pointer;
+  height: 45px;
+  margin: 0;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+/* Barra de pesquisa (sem display flex para preservar o campo de texto) */
+.input-pesquisa {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 8px;
+  background-color: #E6E6E6;
+  font-size: 15px;
+  width: 280px;
+  outline: none;
+  border: none;
+}
+
+/* Botões com alinhamento flexível */
+.btn-filtro {
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Tabela */
+.btn-icone {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  background-color: #E6E6E6;
+  font-size: 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
 .tabela-funcionarios {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 40px;
 }
 
 .tabela-funcionarios th {
   text-align: left;
-  padding: 15px 10px;
-  border-bottom: 1px solid #E5E5E5;
-  color: #333;
-  font-weight: 600;
-  font-size: 16px;
+  padding: 20px;
+  border-bottom: 1px solid #EAEAEA;
+  color: #1A1A1A;
+  font-weight: 800;
+  font-size: 19px;
 }
 
 .tabela-funcionarios td {
-  padding: 20px 10px;
-  border-bottom: 1px solid #E5E5E5;
-  color: #555;
-  font-size: 14px;
+  padding: 24px 20px;
+  border-bottom: 1px solid #EAEAEA;
+  color: #1A1A1A;
+  font-size: 18px;
+  font-weight: 500;
 }
 
-.font-bold {
-  font-weight: 600;
-  color: #333 !important;
+.tabela-funcionarios tr:last-child td {
+  border-bottom: none;
 }
 
-/* Rodapé com botão salvar */
 .rodape-tabela {
   display: flex;
   justify-content: flex-end;
+  margin-top: 30px;
 }
 
 .btn-salvar {
-  padding: 12px 24px;
-  border-radius: 6px;
+  padding: 14px 32px;
+  background-color: #E6E6E6;
   border: none;
-  background-color: #D4D4D4;
-  color: #333;
+  border-radius: 8px;
+  font-size: 17px;
   font-weight: 600;
+  color: #333;
   cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-salvar:hover {
-  background-color: #C0C0C0;
 }
