@@ -1,10 +1,49 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/AuthLayout';
+import {
+  AccountTypeSwitch,
+  AuthInput,
+  AuthSelect,
+  PasswordStrengthMeter,
+} from '../components/AuthField';
 import Botao from '../components/Botao';
-import TipoUsuario from '../components/TipoUsuario';
+import { cadastrarUsuario } from '../services/authService';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function formatarTelefone(valor) {
+  const digitos = valor.replace(/\D/g, '').slice(0, 11);
+  if (digitos.length <= 2) return digitos.length ? `(${digitos}` : '';
+  if (digitos.length <= 6) return `(${digitos.slice(0, 2)}) ${digitos.slice(2)}`;
+  if (digitos.length <= 10) {
+    return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 6)}-${digitos.slice(6)}`;
+  }
+  return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 7)}-${digitos.slice(7)}`;
+}
 
 export default function Cadastro() {
+  const navigate = useNavigate();
+
+  const [tipoUsuario, setTipoUsuario] = useState('cliente');
   const [cidades, setCidades] = useState([]);
+  const [carregandoCidades, setCarregandoCidades] = useState(true);
+
+  const [nome, setNome] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [email, setEmail] = useState('');
+  const [tipoEstabelecimento, setTipoEstabelecimento] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [aceitouTermos, setAceitouTermos] = useState(false);
+
+  const [touched, setTouched] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [shakeCount, setShakeCount] = useState(0);
+
+  const [carregando, setCarregando] = useState(false);
+  const [erroApi, setErroApi] = useState('');
 
   useEffect(() => {
     fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome')
@@ -14,92 +53,293 @@ export default function Cadastro() {
           setCidades(dados);
         }
       })
-      .catch((erro) => console.error("Erro ao carregar cidades:", erro));
+      .catch((erro) => console.error('Erro ao carregar cidades:', erro))
+      .finally(() => setCarregandoCidades(false));
   }, []);
 
+  const isEmpresa = tipoUsuario === 'empresa';
+  const isEmailValid = EMAIL_REGEX.test(email.trim());
+  const telefoneDigitos = telefone.replace(/\D/g, '');
+
+  function handleTrocarTipo(novoTipo) {
+    if (novoTipo === tipoUsuario) return;
+    setTipoUsuario(novoTipo);
+    setSubmitted(false);
+    setTouched({});
+    setErroApi('');
+  }
+
+  function markTouched(field) {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }
+
+  const nomeError = !nome.trim() && submitted
+    ? isEmpresa
+      ? 'Informe o nome da empresa.'
+      : 'Informe seu nome completo.'
+    : '';
+
+  const emailError = !email.trim()
+    ? submitted
+      ? 'Informe seu e-mail.'
+      : ''
+    : (touched.email || submitted) && !isEmailValid
+      ? 'Digite um e-mail válido.'
+      : '';
+
+  const telefoneError = !isEmpresa
+    ? telefoneDigitos.length === 0
+      ? submitted
+        ? 'Informe seu número de contato.'
+        : ''
+      : (touched.telefone || submitted) && telefoneDigitos.length < 10
+        ? 'Digite um telefone com DDD.'
+        : ''
+    : '';
+
+  const estabelecimentoError =
+    isEmpresa && !tipoEstabelecimento && submitted
+      ? 'Selecione o tipo de estabelecimento.'
+      : '';
+
+  const cidadeError = !cidade && submitted ? 'Selecione sua cidade.' : '';
+
+  const senhaError = !senha
+    ? submitted
+      ? 'Crie uma senha.'
+      : ''
+    : (touched.senha || submitted) && senha.length < 6
+      ? 'Use pelo menos 6 caracteres.'
+      : '';
+
+  const confirmarError = !confirmarSenha
+    ? submitted
+      ? 'Confirme sua senha.'
+      : ''
+    : (touched.confirmarSenha || submitted) && senha !== confirmarSenha
+      ? 'As senhas não coincidem.'
+      : '';
+
+  const termosError =
+    !aceitouTermos && submitted
+      ? 'Aceite os Termos e a Política de Privacidade.'
+      : '';
+
+  const hasAnyVisibleError = Boolean(
+    nomeError ||
+      emailError ||
+      telefoneError ||
+      estabelecimentoError ||
+      cidadeError ||
+      senhaError ||
+      confirmarError ||
+      termosError ||
+      erroApi
+  );
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitted(true);
+    setErroApi('');
+
+    const isInvalid =
+      !nome.trim() ||
+      !email.trim() ||
+      !isEmailValid ||
+      (!isEmpresa && telefoneDigitos.length < 10) ||
+      (isEmpresa && !tipoEstabelecimento) ||
+      !cidade ||
+      !senha ||
+      senha.length < 6 ||
+      !confirmarSenha ||
+      senha !== confirmarSenha ||
+      !aceitouTermos;
+
+    if (isInvalid) {
+      setShakeCount((prev) => prev + 1);
+      return;
+    }
+
+    try {
+      setCarregando(true);
+      await cadastrarUsuario({
+        name: nome.trim(),
+        email: email.trim(),
+        password: senha,
+      });
+
+      navigate('/login', { state: { cadastroSucesso: true } });
+    } catch (erro) {
+      setErroApi(erro.message);
+      setShakeCount((prev) => prev + 1);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
-      <header className="h-16 px-6 md:px-12 flex items-center justify-between border-b border-slate-200 bg-white">
-        <h1 className="font-black text-xl tracking-tight">
-          <Link to="/">AgendaFácil</Link>
-        </h1>
-        <Link to="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">
-          Voltar para o Login
-        </Link>
-      </header>
+    <AuthLayout
+      headerActionLabel="Entrar"
+      headerActionTo="/login"
+      title="Criar conta"
+      subtitle={
+        isEmpresa
+          ? 'Cadastre seu estabelecimento para gerenciar horários e clientes.'
+          : 'Crie sua conta para agendar horários com rapidez.'
+      }
+      wide
+      shake={shakeCount > 0 && hasAnyVisibleError}
+    >
+      <form className="af-auth-form" onSubmit={handleSubmit} noValidate>
+        {erroApi && (
+          <p className="af-auth-alert af-auth-alert--error" role="alert">
+            {erroApi}
+          </p>
+        )}
 
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white border border-slate-100 shadow-xl shadow-slate-200/50 rounded-2xl p-8 flex flex-col my-8">
-          <h2 className="text-3xl font-black mb-1 text-slate-900">Cadastro</h2>
-          <p className="text-sm text-slate-500 mb-6">Escolha o tipo de conta para começar</p>
+        <fieldset className="af-auth-fieldset" disabled={carregando}>
+          <AccountTypeSwitch value={tipoUsuario} onChange={handleTrocarTipo} />
 
-          <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-            <TipoUsuario />
-            
-            <input 
-              type="text" 
-              placeholder="Nome da Empresa" 
-              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+          <div key={tipoUsuario} className="af-auth-dynamic-group">
+            <AuthInput
+              label={isEmpresa ? 'Nome da Empresa' : 'Nome completo'}
+              type="text"
+              value={nome}
+              onChange={(e) => {
+                setNome(e.target.value);
+                if (erroApi) setErroApi('');
+              }}
+              onBlur={() => markTouched('nome')}
+              placeholder={isEmpresa ? 'Ex: Barbearia Central' : 'Ex: João Silva'}
+              autoComplete={isEmpresa ? 'organization' : 'name'}
+              error={nomeError}
             />
-            <input 
-              type="email" 
-              placeholder="Email" 
-              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+
+            <AuthInput
+              label="E-mail"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (erroApi) setErroApi('');
+              }}
+              onBlur={() => markTouched('email')}
+              placeholder={isEmpresa ? 'contato@empresa.com' : 'voce@exemplo.com'}
+              autoComplete="email"
+              error={emailError}
             />
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input 
-                type="password" 
-                placeholder="Senha" 
-                className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+
+            <div className="af-auth-grid-2">
+              {isEmpresa ? (
+                <AuthSelect
+                  label="Tipo de Estabelecimento"
+                  value={tipoEstabelecimento}
+                  onChange={(e) => setTipoEstabelecimento(e.target.value)}
+                  onBlur={() => markTouched('tipoEstabelecimento')}
+                  placeholder="Selecione"
+                  error={estabelecimentoError}
+                >
+                  <option value="barbearia">Barbearia</option>
+                  <option value="clinica">Clínica</option>
+                </AuthSelect>
+              ) : (
+                <AuthInput
+                  label="Número de contato"
+                  type="tel"
+                  inputMode="tel"
+                  value={telefone}
+                  onChange={(e) => setTelefone(formatarTelefone(e.target.value))}
+                  onBlur={() => markTouched('telefone')}
+                  placeholder="(11) 99999-9999"
+                  autoComplete="tel"
+                  maxLength={15}
+                  error={telefoneError}
+                />
+              )}
+
+              <AuthSelect
+                label="Cidade"
+                value={cidade}
+                onChange={(e) => setCidade(e.target.value)}
+                onBlur={() => markTouched('cidade')}
+                placeholder={
+                  carregandoCidades && cidades.length === 0
+                    ? 'Carregando...'
+                    : 'Selecione'
+                }
+                disabled={carregandoCidades && cidades.length === 0}
+                error={cidadeError}
+              >
+                {cidades.map((item) => (
+                  <option key={item.id} value={item.nome}>
+                    {item.nome} - {item?.microrregiao?.mesorregiao?.UF?.sigla || 'BR'}
+                  </option>
+                ))}
+              </AuthSelect>
+            </div>
+          </div>
+
+          <div>
+            <div className="af-auth-grid-2">
+              <AuthInput
+                label="Senha"
+                type="password"
+                value={senha}
+                onChange={(e) => {
+                  setSenha(e.target.value);
+                  if (erroApi) setErroApi('');
+                }}
+                onBlur={() => markTouched('senha')}
+                placeholder="Mínimo 6 caracteres"
+                autoComplete="new-password"
+                error={senhaError}
               />
-              <input 
-                type="password" 
-                placeholder="Confirmar" 
-                className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
+
+              <AuthInput
+                label="Confirmar senha"
+                type="password"
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                onBlur={() => markTouched('confirmarSenha')}
+                placeholder="Repita a senha"
+                autoComplete="new-password"
+                error={confirmarError}
               />
             </div>
-            
-            <select 
-              defaultValue="" 
-              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm text-slate-500 cursor-pointer"
-            >
-              <option value="" disabled>Tipo de Estabelecimento</option>
-              <option value="barbearia">Barbearia</option>
-              <option value="clinica">Clínica</option>
-            </select>
 
-            <select 
-              defaultValue="" 
-              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm text-slate-500 cursor-pointer"
-            >
-              <option value="" disabled>Cidade</option>
-              {cidades?.map((cidade) => (
-                <option key={cidade.id} value={cidade.nome}>
-                  {cidade.nome} - {cidade?.microrregiao?.mesorregiao?.UF?.sigla || 'BR'}
-                </option>
-              ))}
-            </select>
+            <PasswordStrengthMeter password={senha} />
+          </div>
 
-            <div className="flex items-center gap-2 mt-2">
-              <input 
-                type="checkbox" 
-                id="termos" 
-                className="w-4 h-4 text-blue-600 bg-slate-50 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+          <div>
+            <div className="af-auth-check">
+              <input
+                type="checkbox"
+                id="termos"
+                checked={aceitouTermos}
+                onChange={(e) => setAceitouTermos(e.target.checked)}
+                aria-invalid={Boolean(termosError)}
+                className="af-auth-check__input"
               />
-              <label htmlFor="termos" className="text-xs text-slate-600 cursor-pointer select-none">
+              <label htmlFor="termos" className="af-auth-check__label">
                 Li e aceito os Termos e a Política de Privacidade
               </label>
             </div>
-            
-            <Botao texto="Cadastrar" />
-          </form>
+            {termosError && (
+              <span className="af-field__error" role="alert">
+                {termosError}
+              </span>
+            )}
+          </div>
 
-          <p className="text-sm text-slate-600 text-center mt-6">
-            Já possui uma conta? <Link to="/login" className="text-blue-600 font-semibold hover:underline">Entrar</Link>
-          </p>
-        </div>
-      </main>
-    </div>
+          <div className="af-auth-submit">
+            <Botao texto={carregando ? 'Cadastrando...' : 'Cadastrar'} />
+          </div>
+        </fieldset>
+      </form>
+
+      <p className="af-auth-switch">
+        Já possui uma conta? <Link to="/login">Entrar</Link>
+      </p>
+    </AuthLayout>
   );
 }

@@ -1,0 +1,706 @@
+/* ==========================================================================
+   Autenticação (Login & Cadastro) — Identidade Visual AgendaFácil
+   ========================================================================== */
+
+html {
+  scrollbar-gutter: stable;
+}
+
+.af-auth-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  color: var(--color-text-primary, #0f172a);
+  overflow-x: clip;
+}
+
+/* ---------- HEADER (Alinhamento idêntico à Landing Page) ---------- */
+.af-auth-page .lp-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  height: var(--header-height, 68px);
+  padding-inline: 0;
+  background-color: #ffffff;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.af-auth-page .lp-header__inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.af-auth-page .lp-brand {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary, #0f172a);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.af-auth-page .lp-brand:hover {
+  color: #2563eb;
+}
+
+.af-auth-header__action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding-inline: 0.85rem;
+  border-radius: var(--radius-md, 10px);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.af-auth-header__action:hover {
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+
+/* ---------- PALCO CENTRAL & DETALHES DO BACKGROUND ---------- */
+.af-auth-main {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 3.75rem) clamp(1rem, 3.5vw, 1.5rem);
+  overflow: clip;
+}
+
+.af-auth-bg-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(203, 213, 225, 0.36) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(203, 213, 225, 0.36) 1px, transparent 1px);
+  background-size: 52px 52px;
+  -webkit-mask-image: radial-gradient(ellipse 82% 76% at 50% 50%, #000 18%, transparent 82%);
+  mask-image: radial-gradient(ellipse 82% 76% at 50% 50%, #000 18%, transparent 82%);
+}
+
+.af-auth-blob {
+  position: absolute;
+  border-radius: 44% 56% 62% 38% / 46% 40% 60% 54%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(85px);
+}
+
+.af-auth-blob--blue {
+  width: clamp(280px, 38vw, 520px);
+  height: clamp(280px, 38vw, 520px);
+  top: -130px;
+  left: -130px;
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.16) 0%,
+    rgba(56, 189, 248, 0.09) 48%,
+    rgba(37, 99, 235, 0) 74%
+  );
+}
+
+.af-auth-blob--lavender {
+  width: clamp(280px, 38vw, 500px);
+  height: clamp(280px, 38vw, 500px);
+  bottom: -140px;
+  right: -120px;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.15) 0%,
+    rgba(167, 139, 250, 0.08) 48%,
+    rgba(124, 58, 237, 0) 74%
+  );
+}
+
+/* ---------- CARD DO FORMULÁRIO ---------- */
+.af-auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  min-width: 0;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-xl, 18px);
+  box-shadow:
+    0 8px 28px -8px rgba(15, 23, 42, 0.06),
+    0 1px 3px rgba(15, 23, 42, 0.03);
+  padding: clamp(1.75rem, 4.5vw, 2.65rem);
+  animation: af-card-enter 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.af-auth-card--wide {
+  max-width: 500px;
+}
+
+.af-auth-card--shake {
+  animation: af-shake 0.34s ease-out;
+}
+
+@keyframes af-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes af-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+}
+
+.af-auth-header-block {
+  margin-bottom: 1.85rem;
+}
+
+.af-auth-title {
+  font-size: clamp(1.6rem, 2.5vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.af-auth-subtitle {
+  margin-top: 0.45rem;
+  font-size: var(--text-sm, 0.875rem);
+  line-height: 1.55;
+  color: var(--color-text-secondary, #475569);
+}
+
+/* ---------- SELETOR DESLIZANTE CLIENTE / EMPRESA ---------- */
+.af-type-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  padding: 4px;
+  border-radius: var(--radius-md, 10px);
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  user-select: none;
+}
+
+.af-type-switch__glider {
+  display: block;
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: calc(var(--radius-md, 10px) - 2px);
+  background-color: #2563eb;
+  box-shadow: 0 2px 8px -2px rgba(37, 99, 235, 0.45);
+  transform: translate3d(0%, 0, 0);
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.af-type-switch[data-selected='empresa'] .af-type-switch__glider {
+  transform: translate3d(100%, 0, 0);
+}
+
+.af-type-switch__btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding-inline: 0.5rem;
+  border: none;
+  border-radius: calc(var(--radius-md, 10px) - 2px);
+  background: transparent !important;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition:
+    color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.14s ease;
+}
+
+.af-type-switch__btn:hover:not([aria-pressed='true']) {
+  color: var(--color-text-primary, #0f172a);
+}
+
+.af-type-switch__btn:active {
+  transform: scale(0.98);
+}
+
+.af-type-switch__btn[aria-pressed='true'] {
+  color: #ffffff;
+}
+
+.af-type-switch__btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* ---------- ESTRUTURA & TRANSIÇÃO DE CAMPOS ---------- */
+.af-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.af-auth-dynamic-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  animation: af-fields-swap 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes af-fields-swap {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.af-auth-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.35rem;
+  min-width: 0;
+}
+
+@media (min-width: 540px) {
+  .af-auth-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* ---------- INPUTS COM LINHA INFERIOR ANIMADA DO CENTRO ---------- */
+.af-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.af-field__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  color: #475569;
+  transition: color 0.24s ease;
+}
+
+.af-field--focused .af-field__label,
+.af-field:focus-within .af-field__label {
+  color: #2563eb;
+}
+
+.af-field--error .af-field__label {
+  color: #dc2626;
+}
+
+.af-field__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Linha azul dedicada que nasce no centro e cresce até tocar as bordas */
+.af-field__line {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: #2563eb;
+  transform: scaleX(0);
+  transform-origin: center center;
+  transition:
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s ease;
+  will-change: transform;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.af-field--focused .af-field__line,
+.af-field__box:focus-within .af-field__line {
+  transform: scaleX(1);
+}
+
+.af-field--error .af-field__line {
+  background-color: #dc2626;
+}
+
+.af-field__input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0.45rem 0.15rem;
+  border: none;
+  border-bottom: 1px solid #cbd5e1;
+  border-radius: 0;
+  background-color: transparent !important;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-primary, #0f172a);
+  outline: none;
+  transition: border-color 0.24s ease;
+}
+
+.af-field__input--password {
+  padding-right: 2.5rem;
+}
+
+.af-field__input::placeholder {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 400;
+  opacity: 1;
+}
+
+/* Hover apenas na linha inferior, sem background */
+.af-field__input:hover:not(:disabled):not(:focus) {
+  border-bottom-color: #94a3b8;
+  background-color: transparent !important;
+}
+
+/* Estado: Preenchido */
+.af-field__input[data-filled='true'] {
+  border-bottom-color: #64748b;
+}
+
+/* Estado: Erro */
+.af-field--error .af-field__input {
+  border-bottom-color: #dc2626;
+}
+
+/* Select minimalista */
+.af-field__select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 1.85rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.2rem center;
+  background-size: 15px;
+}
+
+.af-field__select[data-filled='false'] {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.af-field__select option {
+  color: var(--color-text-primary, #0f172a);
+  font-size: 0.9375rem;
+}
+
+/* Botão de visualizar/ocultar senha */
+.af-field__toggle-pw {
+  position: absolute;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.af-field__toggle-pw:hover {
+  color: var(--color-text-primary, #0f172a);
+}
+
+.af-field__toggle-pw:active {
+  transform: scale(0.92);
+}
+
+.af-field__toggle-pw:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+.af-field__toggle-pw svg {
+  transition: transform 0.22s ease;
+}
+
+.af-field__toggle-pw[aria-pressed='true'] svg {
+  transform: scale(1.06);
+}
+
+/* Mensagem de Erro */
+.af-field__error {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #dc2626;
+  line-height: 1.4;
+  animation: af-fade-slide 0.2s ease-out;
+}
+
+@keyframes af-fade-slide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- TRANSIÇÃO SUAVE PARA CONTEÚDOS DINÂMICOS ---------- */
+.af-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease;
+}
+
+.af-collapse--open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.af-collapse__inner {
+  overflow: hidden;
+}
+
+/* ---------- INDICADOR DE FORÇA DA SENHA ---------- */
+.af-pw-inline {
+  padding-top: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.af-pw-inline__bars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+}
+
+.af-pw-inline__bar {
+  height: 3px;
+  border-radius: var(--radius-full, 9999px);
+  background-color: #e2e8f0;
+  transition: background-color 0.26s ease;
+}
+
+.af-pw-inline__bar--weak {
+  background-color: #ef4444;
+}
+
+.af-pw-inline__bar--medium {
+  background-color: #f59e0b;
+}
+
+.af-pw-inline__bar--strong {
+  background-color: #2563eb;
+}
+
+.af-pw-inline__caption {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-secondary, #475569);
+}
+
+.af-pw-inline__caption strong {
+  font-weight: 700;
+}
+
+/* ---------- AVISO DE RECUPERAÇÃO DE SENHA ---------- */
+.af-auth-notice {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md, 10px);
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: var(--text-xs, 0.75rem);
+  line-height: 1.55;
+  color: var(--color-text-secondary, #475569);
+  text-align: left;
+}
+
+/* ---------- CHECKBOX DE TERMOS ---------- */
+.af-auth-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding-top: 0.1rem;
+}
+
+.af-auth-check__input {
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.af-auth-check__label {
+  font-size: var(--text-xs, 0.75rem);
+  line-height: 1.5;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ---------- BOTÃO PRINCIPAL (Compatível com <Botao />) ---------- */
+.af-auth-submit {
+  margin-top: 0.35rem;
+}
+
+.af-auth-submit button {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-md, 10px);
+  background-color: #2563eb;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 3px 12px -2px rgba(37, 99, 235, 0.36);
+  transition:
+    background-color 0.2s ease,
+    transform 0.16s ease,
+    box-shadow 0.2s ease;
+}
+
+.af-auth-submit button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 18px -4px rgba(37, 99, 235, 0.44);
+}
+
+.af-auth-submit button:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+}
+
+.af-auth-submit button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 2px;
+}
+
+.af-auth-submit button:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+/* ---------- LINKS INFERIORES (Sem linha divisória) ---------- */
+.af-auth-links {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.af-auth-switch {
+  margin-top: 1.35rem;
+  text-align: center;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--color-text-secondary, #475569);
+}
+
+.af-auth-links .af-auth-switch {
+  margin-top: 0;
+}
+
+.af-auth-switch a {
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.af-auth-switch a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* ---------- FEEDBACK DE RESPOSTA DA API (Erro e Sucesso) ---------- */
+.af-auth-alert {
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.45;
+  animation: af-fade-slide 0.2s ease-out;
+}
+
+.af-auth-alert--error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.af-auth-alert--success {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+.af-auth-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}

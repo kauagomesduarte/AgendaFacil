@@ -1,48 +1,149 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/AuthLayout';
+import { AuthInput } from '../components/AuthField';
 import Botao from '../components/Botao';
+import { loginUsuario } from '../services/authService';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [touched, setTouched] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [shakeCount, setShakeCount] = useState(0);
+  const [showRecoveryNotice, setShowRecoveryNotice] = useState(false);
+
+  const [carregando, setCarregando] = useState(false);
+  const [erroApi, setErroApi] = useState('');
+  const [cadastroSucesso] = useState(Boolean(location.state?.cadastroSucesso));
+
+  const isEmailValid = EMAIL_REGEX.test(email.trim());
+
+  const emailError = !email.trim()
+    ? submitted
+      ? 'Informe seu e-mail.'
+      : ''
+    : (touched.email || submitted) && !isEmailValid
+      ? 'Digite um e-mail válido.'
+      : '';
+
+  const senhaError = !senha && submitted ? 'Informe sua senha.' : '';
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitted(true);
+    setErroApi('');
+
+    if (!email.trim() || !isEmailValid || !senha) {
+      setShakeCount((prev) => prev + 1);
+      return;
+    }
+
+    try {
+      setCarregando(true);
+      await loginUsuario({
+        email: email.trim(),
+        password: senha,
+      });
+      navigate('/meus-horarios');
+    } catch (erro) {
+      setErroApi(erro.message);
+      setShakeCount((prev) => prev + 1);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
-      <header className="h-16 px-6 md:px-12 flex items-center justify-between border-b border-slate-200 bg-white">
-        <h1 className="font-black text-xl tracking-tight">
-          <Link to="/">AgendaFácil</Link>
-        </h1>
-        <Link to="/cadastro" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">
-          Cadastro
-        </Link>
-      </header>
+    <AuthLayout
+      headerActionLabel="Criar conta"
+      headerActionTo="/cadastro"
+      title="Entrar"
+      subtitle="Acesse sua conta para acompanhar seus horários."
+      shake={shakeCount > 0 && Boolean(emailError || senhaError || erroApi)}
+    >
+      <form className="af-auth-form" onSubmit={handleSubmit} noValidate>
+        {cadastroSucesso && !erroApi && (
+          <p className="af-auth-alert af-auth-alert--success" role="status">
+            Conta criada com sucesso. Faça login para continuar.
+          </p>
+        )}
 
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white border border-slate-100 shadow-xl shadow-slate-200/50 rounded-2xl p-8 flex flex-col">
-          <h2 className="text-3xl font-black mb-1 text-slate-900">Login</h2>
-          <p className="text-sm text-slate-500 mb-8">Faça login para acessar a plataforma</p>
+        {erroApi && (
+          <p className="af-auth-alert af-auth-alert--error" role="alert">
+            {erroApi}
+          </p>
+        )}
 
-          <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-            <input 
-              type="email" 
-              placeholder="Email" 
-              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
-            />
-            <input 
-              type="password" 
-              placeholder="Senha" 
-              className="w-full h-11 px-4 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-slate-50 focus:bg-white text-sm" 
-            />
+        <fieldset className="af-auth-fieldset" disabled={carregando}>
+          <AuthInput
+            label="E-mail"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (erroApi) setErroApi('');
+            }}
+            onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
+            placeholder="voce@exemplo.com"
+            autoComplete="email"
+            error={emailError}
+          />
 
-            <Botao texto="Entrar" />
-          </form>
-          
-          <div className="mt-6 flex flex-col gap-2 text-center">
-            <p className="text-sm text-slate-600">
-              Ainda não possui uma conta? <Link to="/cadastro" className="text-blue-600 font-semibold hover:underline">Cadastre-se</Link>
+          <AuthInput
+            label="Senha"
+            type="password"
+            value={senha}
+            onChange={(e) => {
+              setSenha(e.target.value);
+              if (erroApi) setErroApi('');
+            }}
+            onBlur={() => setTouched((prev) => ({ ...prev, senha: true }))}
+            placeholder="Digite sua senha"
+            autoComplete="current-password"
+            error={senhaError}
+          />
+
+          <div className="af-auth-submit">
+            <Botao texto={carregando ? 'Entrando...' : 'Entrar'} />
+          </div>
+        </fieldset>
+      </form>
+
+      <div className="af-auth-links">
+        <p className="af-auth-switch">
+          <a
+            href="#recuperar-senha"
+            onClick={(e) => {
+              e.preventDefault();
+              setShowRecoveryNotice((prev) => !prev);
+            }}
+            aria-expanded={showRecoveryNotice}
+          >
+            Esqueci minha senha
+          </a>
+        </p>
+
+        <div
+          className={`af-collapse ${showRecoveryNotice ? 'af-collapse--open' : ''}`}
+          aria-hidden={!showRecoveryNotice}
+        >
+          <div className="af-collapse__inner">
+            <p className="af-auth-notice" role="status">
+              Para recuperar o acesso à sua conta, entre em contato com o suporte ou com o administrador do seu estabelecimento.
             </p>
-            <a href="#" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
-              Esqueci meu email ou senha
-            </a>
           </div>
         </div>
-      </main>
-    </div>
+
+        <p className="af-auth-switch">
+          Ainda não possui uma conta? <Link to="/cadastro">Cadastre-se</Link>
+        </p>
+      </div>
+    </AuthLayout>
   );
 }
