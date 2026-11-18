@@ -1,0 +1,133 @@
+.funcionarios-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #F8F9FA;
+}
+
+.conteudo-principal {
+  flex: 1;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.cartao-funcionarios {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 100%;
+  padding: 24px 32px;
+  border: 1px solid #EAEAEA;
+}
+
+.cabecalho-tabela {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.cabecalho-tabela h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+  line-height: 1;
+}
+
+.acoes-cabecalho {
+  display: flex;
+  gap: 10px;
+  align-items: center; 
+}
+
+.input-pesquisa {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: 1px solid #EAEAEA;
+  background-color: #F3F4F6;
+  font-size: 14px;
+  width: 240px;
+  outline: none;
+  box-sizing: border-box;
+  line-height: normal;
+}
+
+.btn-filtro {
+  height: 38px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 6px;
+  border: 1px solid #EAEAEA;
+  background-color: #F3F4F6;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+
+.btn-icone {
+  height: 38px;
+  width: 38px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid #EAEAEA;
+  background-color: #F3F4F6;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tabela-funcionarios {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-funcionarios th {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid #EAEAEA;
+  color: #1A1A1A;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.tabela-funcionarios td {
+  padding: 16px;
+  border-bottom: 1px solid #EAEAEA;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.tabela-funcionarios tr:last-child td {
+  border-bottom: none;
+}
+
+.rodape-tabela {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.btn-salvar {
+  padding: 10px 24px;
+  background-color: #E6E6E6;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+}

@@ -1,0 +1,381 @@
+AGENDAFACIL - CONTRATO DA API
+=============================
+
+Este documento descreve as rotas atualmente implementadas no backend. Ele registra
+o comportamento efetivo do código, inclusive limitações de autorização conhecidas.
+
+Base URL local: http://localhost:3000
+Prefixo global: nenhum
+Formato: JSON, exceto respostas 204, sem corpo.
+Autenticacao: cookie HTTP-only "token", criado pelo endpoint de login.
+Content-Type para corpos JSON: application/json
+
+
+1. AUTENTICACAO E FORMATOS GERAIS
+---------------------------------
+
+Rotas protegidas exigem um cookie "token" válido. O cliente deve armazenar e
+reenviar cookies, por exemplo, habilitando credentials no cliente HTTP.
+
+Login define o cookie com HttpOnly, SameSite=Lax e validade de uma hora. No estado
+atual, a flag Secure e false.
+
+Erros tratados:
+  - AppError: {"message": "mensagem"} com o status HTTP definido pela regra.
+  - Erro inesperado: 500 {"message": "Internal server error"}.
+  - Falha de validação de DTO: normalmente 400 com "message" e "errors".
+
+Enums:
+  CompanyRole: OWNER | MANAGER | EMPLOYEE
+  AppointmentStatus: PENDING | CONFIRMED | REJECTED | CANCELLED | COMPLETED | NO_SHOW
+
+Identificadores numéricos devem ser positivos. Alguns parâmetros de ID são
+validados explicitamente; em outras rotas o código converte o valor diretamente.
+
+
+2. USUARIOS
+-----------
+
+POST /users
+  Autenticacao: não exigida.
+  Corpo:
+    {
+      "name": "Nome Sobrenome",       (string, minimo 3 caracteres)
+      "email": "cliente@exemplo.com", (email valido)
+      "password": "senha123"          (string, minimo 8 caracteres)
+    }
+  Sucesso: 201 {"message": "Usuário criado"}
+  Erro: 400 para dados invalidos ou e-mail ja registrado.
+
+GET /users/:id
+  Autenticacao: não exigida.
+  Sucesso: 200 {"id": 1, "name": "Nome", "email": "cliente@exemplo.com"}
+  Erro: 400 se o usuario nao existir (mensagem atual: "Usuário não encontrado").
+
+PATCH /users/:id
+  Autenticacao: token exigido.
+  Corpo: qualquer combinacao nao vazia de:
+    {"name": "Novo Nome", "email": "novo@exemplo.com", "password": "novaSenha123"}
+  Regras de campos: name minimo 3; password minimo 8; email valido.
+  Sucesso: 200 com o usuario publico atualizado (id, name, email).
+  Nota de autorizacao: o codigo exige login, mas nao verifica se :id pertence ao
+  usuario autenticado. Assim, atualmente o endpoint permite atualizar outro usuario.
+
+As rotas GET /users (listar) e DELETE /users/:id existem em trechos desativados e
+nao estao expostas.
+
+
+3. LOGIN
+--------
+
+POST /auth/login
+  Autenticacao: não exigida.
+  Corpo:
+    {"email": "cliente@exemplo.com", "password": "senha123"}
+  Validacao: email valido; senha com minimo 8 caracteres.
+  Sucesso: 200 {"message": "Logged in successfully."}
+           Define o cookie HTTP-only "token".
+  Erro: 400 para credenciais invalidas.
+
+
+4. EMPRESAS
+-----------
+
+Todas as rotas /comp/* exigem token, pois o middleware de autenticacao e aplicado
+ao router /comp inteiro.
+
+POST /comp
+  Corpo:
+    {"name": "Empresa", "timeZone": "America/Sao_Paulo"}
+  Validacao: name entre 3 e 150 caracteres; timeZone deve ser um fuso IANA valido
+  com ate 64 caracteres.
+  Sucesso: 201 {"id": 1, "name": "Empresa", "timeZone": "America/Sao_Paulo"}
+  Efeito: o usuario autenticado torna-se OWNER da empresa.
+
+GET /comp
+  Sucesso: 200 array de empresas (id, name, timeZone).
+  Autorizacao atual: qualquer usuario autenticado; nao filtra por associacao.
+
+GET /comp/:id
+  Sucesso: 200 empresa (id, name, timeZone).
+  Erro: 404 se nao encontrada.
+  Autorizacao atual: qualquer usuario autenticado; nao verifica associacao.
+
+PATCH /comp/:id
+  Permissao: OWNER da empresa.
+  Corpo: um ou ambos:
+    {"name": "Novo nome", "timeZone": "America/Sao_Paulo"}
+  Campos opcionais; name entre 3 e 150; timeZone IANA valido.
+  Sucesso: 200 empresa atualizada.
+  Erros: 404 se inexistente; 409 se mudar o fuso apos existir agenda ou
+  agendamento, conforme as regras do backend.
+
+DELETE /comp/:id
+  Permissao: OWNER.
+  Sucesso: 204 sem corpo.
+  Erros: 404 se inexistente; 409 se houver agendamento futuro ativo ou qualquer
+  historico de agendamento.
+
+
+5. FUNCIONARIOS E PAPEIS NA EMPRESA
+-----------------------------------
+
+Nos endpoints abaixo, :companyId e o ID da empresa. :employeeId e o ID do vinculo
+CompanyUser, nao necessariamente o ID global do usuario.
+
+POST /comp/:companyId/emp
+  Permissao: OWNER ou MANAGER.
+  Corpo: {"userId": 2, "role": "EMPLOYEE"}
+  role e opcional no banco (padrao EMPLOYEE); se enviado, use OWNER, MANAGER ou
+  EMPLOYEE.
+  Sucesso: 201 objeto CompanyUser (id, userId, companyId, role).
+  Erros: 404 para usuario/empresa inexistente; 409 se o usuario ja estiver
+  associado a empresa.
+
+GET /comp/:companyId/emp
+  Permissao: membro da empresa com qualquer papel.
+  Sucesso: 200 array de objetos CompanyUser.
+  Escopo: retorna os funcionarios da empresa, inclusive para papel EMPLOYEE.
+
+GET /comp/:companyId/emp/:userId
+  Permissao: membro da empresa com qualquer papel.
+  Nota: este parametro e o ID global do usuario, nao CompanyUser.id.
+  Sucesso: 200 objeto CompanyUser; 404 se nao encontrado.
+
+PATCH /comp/:companyId/emp/:employeeId
+  Permissao de rota: OWNER.
+  Corpo: {"role": "MANAGER"}.
+  Sucesso: 200 objeto CompanyUser atualizado.
+  Regras adicionais: a hierarquia impede alterar papel de papel igual/superior ao
+  solicitante, e impede atribuir ao alvo o mesmo papel do solicitante.
+  Erros: 400 se o papel ja for o mesmo; 403 para acao nao autorizada; 404 se
+  vinculo inexistente.
+
+DELETE /comp/:companyId/emp/:employeeId
+  Permissao de rota e service: OWNER ou MANAGER, respeitada a hierarquia (nao
+  pode remover papel igual ou superior).
+  Sucesso: 204 sem corpo.
+  Erros: 404 se inexistente; 409 se houver agendamento futuro ativo ou historico.
+
+
+6. SERVICOS E ASSOCIACOES COM FUNCIONARIOS
+------------------------------------------
+
+Todas as rotas /comp/*/serv/* exigem token por heranca do router /comp.
+Leituras nao exigem papel nem verificam que o usuario pertence a empresa.
+
+POST /comp/:companyId/serv
+  Permissao: OWNER ou MANAGER.
+  Corpo:
+    {"name": "Consulta", "price": 120.50, "durationMinutes": 45}
+  Regras: name entre 1 e 150 caracteres; price numero finito >= 0;
+  durationMinutes inteiro positivo.
+  Sucesso: 201 objeto Service (id, companyId, name, price, durationMinutes).
+
+GET /comp/:companyId/serv
+  Permissao atual: qualquer usuario autenticado.
+  Sucesso: 200 array de servicos da empresa.
+
+GET /comp/:companyId/serv/:serviceId
+  Permissao atual: qualquer usuario autenticado.
+  Sucesso: 200 objeto Service; 404 se nao encontrado.
+
+PATCH /comp/:companyId/serv/:serviceId
+  Permissao: OWNER ou MANAGER.
+  Corpo: um ou mais campos entre name, price e durationMinutes. Deve conter ao
+  menos um campo. Mesmas regras de formato da criacao.
+  Sucesso: 200 objeto Service atualizado; 404 se nao encontrado.
+
+DELETE /comp/:companyId/serv/:serviceId
+  Permissao: OWNER ou MANAGER.
+  Sucesso: 204 sem corpo.
+  Erros: 404 se nao encontrado; 409 se houver agendamento futuro ativo ou
+  historico de agendamento.
+
+POST /comp/:companyId/serv/:serviceId/emp/:employeeId
+  Permissao: OWNER ou MANAGER.
+  Corpo: nenhum.
+  Sucesso: 201 objeto EmployeeService (companyUserId, serviceId).
+  Erros: 404 se funcionario/servico nao existir; 409 se a associacao ja existir.
+
+DELETE /comp/:companyId/serv/:serviceId/emp/:employeeId
+  Permissao: OWNER ou MANAGER.
+  Sucesso: 204 sem corpo.
+  Erros: 404 se associacao, funcionario ou servico nao existir; 409 se houver
+  agendamento futuro ativo ou historico para essa associacao.
+
+GET /comp/:companyId/serv/emp/:employeeId
+  Permissao atual: qualquer usuario autenticado.
+  Sucesso: 200 array de associacoes EmployeeService, incluindo o objeto service.
+
+
+7. HORARIOS SEMANAIS (SCHEDULES)
+--------------------------------
+
+Rota base:
+  /comp/:companyId/emp/:employeeId/schedules
+
+dayOfWeek usa ISO: 1=segunda-feira, 2=terca-feira, ..., 7=domingo.
+startMinute e endMinute sao minutos locais desde meia-noite. O inicio deve ser
+menor que o fim. Intervalos sobrepostos para o mesmo funcionario nao sao aceitos.
+Um turno pode terminar em 1440 (meia-noite).
+
+GET /comp/:companyId/emp/:employeeId/schedules
+  Permissao: membro com qualquer papel.
+  Escopo: EMPLOYEE so pode consultar a propria agenda; OWNER/MANAGER podem
+  consultar agenda de qualquer funcionario da empresa.
+  Sucesso: 200 array ordenado por dia e minuto inicial.
+
+POST /comp/:companyId/emp/:employeeId/schedules
+  Permissao: OWNER ou MANAGER.
+  Corpo: {"dayOfWeek": 1, "startMinute": 540, "endMinute": 1020}
+  Sucesso: 201 objeto Schedule (id, companyUserId, dayOfWeek, startMinute, endMinute).
+  Erros: 400 para intervalo invalido; 404 para funcionario inexistente; 409 para
+  sobreposicao.
+
+PATCH /comp/:companyId/emp/:employeeId/schedules/:scheduleId
+  Permissao: OWNER ou MANAGER.
+  Corpo: um ou mais campos dayOfWeek, startMinute, endMinute; deve conter ao
+  menos um campo.
+  Sucesso: 200 objeto Schedule atualizado.
+  Erros: 400 para intervalo invalido; 404 se agenda nao encontrada; 409 se houver
+  sobreposicao ou se a alteracao invalidar agendamentos PENDING/CONFIRMED futuros.
+
+DELETE /comp/:companyId/emp/:employeeId/schedules/:scheduleId
+  Permissao: OWNER ou MANAGER.
+  Sucesso: 204 sem corpo.
+  Erros: 404 se agenda nao encontrada; 409 se a remocao invalidar agendamentos
+  PENDING/CONFIRMED futuros.
+
+
+8. DISPONIBILIDADE E AGENDAMENTOS DO CLIENTE
+--------------------------------------------
+
+GET /booking/companies/:companyId/availability
+  Autenticacao: token exigido.
+  Query:
+    serviceId   obrigatorio, inteiro positivo
+    date        obrigatorio, formato YYYY-MM-DD, data local da empresa
+    employeeId  opcional, ID do vinculo CompanyUser
+  Sucesso: 200 array:
+    [
+      {
+        "employeeId": 7,
+        "startAt": "2026-11-20T12:00:00.000Z",
+        "endAt": "2026-11-20T12:45:00.000Z"
+      }
+    ]
+  Regras: usa o fuso IANA da empresa, duracao atual do servico, agenda semanal e
+  agendamentos PENDING/CONFIRMED existentes. Retorna inicios em passos de 15
+  minutos. Cada reserva precisa caber integralmente num intervalo de agenda.
+  Erros: 400 para query/data invalida; 404 para empresa/servico/funcionario
+  inexistente; 409 se o fuso da empresa nao estiver configurado/for invalido.
+
+POST /booking/companies/:companyId/appointments
+  Autenticacao: token exigido; o cliente e determinado pelo usuario autenticado.
+  Corpo:
+    {
+      "serviceId": 4,
+      "employeeId": 7,
+      "startAt": "2026-11-20T09:00:00-03:00"
+    }
+  startAt precisa ser data-hora ISO com Z ou offset explicito.
+  Sucesso: 201 objeto Appointment, com snapshots e relacao employeeService
+  contendo funcionario e servico.
+  Regras: inicio futuro e sem segundos/milisegundos; funcionario associado ao
+  servico; fuso configurado; horario dentro de um unico intervalo; conflito
+  simultaneo retorna 409. Novo status: PENDING.
+
+GET /booking/appointments
+  Autenticacao: token exigido.
+  Sucesso: 200 array de agendamentos do cliente autenticado, ordenado pelo inicio.
+  Nao recebe filtros.
+
+GET /booking/appointments/:appointmentId
+  Autenticacao: token exigido.
+  Sucesso: 200 agendamento pertencente ao cliente, incluindo cliente, funcionario,
+  empresa e servico atuais quando disponiveis.
+  Erro: 404 se nao existir ou nao pertencer ao cliente.
+
+POST /booking/appointments/:appointmentId/cancel
+  Autenticacao: token exigido.
+  Corpo: nenhum.
+  Sucesso: 200 agendamento com status CANCELLED.
+  Regras: somente agendamentos PENDING ou CONFIRMED podem ser cancelados pelo
+  cliente, e somente antes do inicio.
+  Erros: 404 se nao existir ou nao pertencer ao cliente; 409 para estado/horario
+  nao permitido.
+
+
+9. GESTAO DE AGENDAMENTOS DA EMPRESA
+------------------------------------
+
+Rota base: /comp/:companyId/appointments
+Todos os endpoints exigem token e papel na empresa.
+
+GET /comp/:companyId/appointments
+  Permissao: OWNER, MANAGER ou EMPLOYEE.
+  Query opcional:
+    from        data-hora ISO com Z/offset; inclui agendamentos cujo endAt > from
+    to          data-hora ISO com Z/offset; inclui agendamentos cujo startAt < to
+    employeeId  ID CompanyUser
+    status      valor de AppointmentStatus
+  Se from e to forem enviados, from deve ser anterior a to.
+  Sucesso: 200 array ordenado por startAt, com cliente, funcionario e servico.
+  Restricao: EMPLOYEE so consulta os proprios agendamentos. OWNER/MANAGER podem
+  consultar a empresa e filtrar employeeId.
+
+GET /comp/:companyId/appointments/:appointmentId
+  Permissao: OWNER, MANAGER ou EMPLOYEE.
+  Sucesso: 200 objeto de agendamento com cliente, funcionario e servico.
+  EMPLOYEE so pode ler o proprio agendamento. Caso fora do escopo, retorna 404.
+
+POST /comp/:companyId/appointments/:appointmentId/confirm
+  POST /comp/:companyId/appointments/:appointmentId/reject
+  POST /comp/:companyId/appointments/:appointmentId/cancel
+  POST /comp/:companyId/appointments/:appointmentId/complete
+  POST /comp/:companyId/appointments/:appointmentId/no-show
+  Permissao: OWNER, MANAGER ou EMPLOYEE; EMPLOYEE so pode alterar os proprios
+  agendamentos.
+  Corpo: nenhum.
+  Sucesso: 200 objeto Appointment atualizado.
+  Transicoes:
+    PENDING   -> CONFIRMED | REJECTED | CANCELLED
+    CONFIRMED -> CANCELLED | COMPLETED | NO_SHOW
+    Estados finais nao podem ser reabertos.
+  Confirmar, rejeitar e cancelar exigem que o inicio ainda nao tenha ocorrido.
+  Completar e marcar NO_SHOW exigem que o horario agendado ja tenha terminado.
+  Erros: 404 se nao encontrado; 409 se estado mudou, transicao nao permitida ou
+  horario nao compativel.
+
+
+10. MODELO DE RESPOSTA DE AGENDAMENTO
+-------------------------------------
+
+Campos persistidos principais:
+  id, companyUserId, serviceId, customerUserId, startAt, endAt, status,
+  companyNameAtBooking, employeeNameAtBooking, serviceNameAtBooking,
+  customerNameAtBooking, customerEmailAtBooking, priceAtBooking,
+  durationMinutesAtBooking, createdAt, updatedAt.
+
+startAt/endAt sao instantes com timezone (Timestamptz). Snapshots de nome, e-mail,
+preco e duracao preservam os dados relevantes no momento da reserva. Alguns
+endpoints retornam somente esses campos persistidos; outros incluem relacoes
+atuais, conforme descrito em cada rota.
+
+
+11. ROTAS NAO EXPOSTAS E OBSERVACOES
+------------------------------------
+
+- GET /users e DELETE /users/:id estao comentados e nao estao disponiveis.
+- Nao ha prefixo /api ou versionamento /v1.
+- Nao ha paginacao documentada nas listagens.
+- A leitura de empresas/servicos exige login devido ao router /comp, mas nao exige
+  papel ou associacao a empresa em todas as rotas de leitura.
+- POST /comp/:companyId/emp aceita role diretamente no corpo; a rota nao possui
+  validacao Zod para esse corpo.
+- Os campos de papel de funcionario e outras rotas sem DTO devem usar os enums e
+  formatos descritos acima; a validacao de entrada pode variar por endpoint.
+- A API usa exclusao fisica para registros sem historico; endpoints de exclusao
+  de empresa, funcionario, servico e associacao recusam quando ha historico de
+  Appointment, e recusam reservas futuras ativas com HTTP 409.

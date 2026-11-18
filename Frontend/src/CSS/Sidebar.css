@@ -1,0 +1,109 @@
+.sidebar-container {
+  width: 260px;
+  background-color: #FFFFFF;
+  border-right: 1px solid #E5E5E5;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-logo {
+  padding: 40px 30px;
+}
+
+.sidebar-logo h1 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+  font-weight: 800;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  color: #555;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  background-color: #F5F5F5;
+}
+
+/* O estilo que cria a barra lateral azul quando o item está selecionado */
+.menu-item.ativo {
+  background-color: #E8F4FF;
+  color: #1A73E8;
+  border-left-color: #1A73E8;
+  font-weight: 600;
+}
+
+.icone {
+  margin-right: 15px;
+  font-size: 18px;
+  filter: grayscale(100%); /* Torna os emojis neutros para um aspeto mais profissional */
+}
+
+.menu-item.ativo .icone {
+  filter: none;
+}
+
+.sidebar-footer {
+  padding: 20px 30px;
+  border-top: 1px solid #E5E5E5;
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.icone-usuario {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.texto-usuario {
+  display: flex;
+  flex-direction: column;
+}
+
+.texto-usuario strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.texto-usuario span {
+  font-size: 12px;
+  color: #888;
+}
+
+.btn-sair {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-sair:hover {
+  color: #333;
+}

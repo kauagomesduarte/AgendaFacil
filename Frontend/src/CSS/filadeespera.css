@@ -1,0 +1,221 @@
+/* ==========================================================================
+   Fila de Espera — Barra de Busca, Filtros, Ações (Chamar/Remover) e Tabela
+   ========================================================================== */
+
+.fe-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.fe-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.fe-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.fe-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 240px;
+  height: 38px;
+  padding-inline: 0.8rem;
+  border-radius: 9px;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.fe-search:focus-within {
+  background-color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.fe-search-icon {
+  color: #64748b;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.fe-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #0f172a;
+  outline: none;
+}
+
+/* Dropdown de filtro */
+.fe-filter-wrap {
+  position: relative;
+}
+
+.fe-filter-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 170px;
+  padding: 0.35rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.fe-filter-option {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #334155;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fe-filter-option:hover {
+  background-color: #f8fafc;
+}
+
+.fe-filter-option.is-active {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+/* ---------- TABELA DA FILA ---------- */
+.fe-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fe-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+.fe-table th {
+  padding: 0.85rem 0.9rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.fe-table td {
+  padding: 0.95rem 0.9rem;
+  font-size: 0.885rem;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.fe-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.fe-row:hover {
+  background-color: #f8fafc;
+}
+
+.fe-row.is-selected {
+  background-color: #eff6ff;
+}
+
+.fe-pos {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.fe-client-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fe-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.24rem 0.72rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.fe-badge--waiting {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.fe-badge--called {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.fe-badge--done {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.fe-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fe-icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.fe-icon-btn--call:hover {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+.fe-icon-btn--remove:hover {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.fe-empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+}

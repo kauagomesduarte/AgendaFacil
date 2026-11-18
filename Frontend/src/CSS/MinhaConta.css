@@ -1,0 +1,297 @@
+/* ==========================================================================
+   Página Minha Conta (Cliente) — Dados Pessoais, Segurança e Sessão
+   ========================================================================== */
+
+.mc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mc-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.mc-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.mc-role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- GRID DE SEÇÕES ---------- */
+.mc-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mc-card {
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+.mc-card-header {
+  margin-bottom: 1.25rem;
+}
+
+.mc-card-title {
+  margin: 0;
+  font-size: 1.025rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mc-card-desc {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+/* ---------- FORMULÁRIOS E CAMPOS ---------- */
+.mc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mc-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .mc-card {
+    padding: 1.15rem;
+  }
+
+  .mc-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mc-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.mc-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mc-input {
+  width: 100%;
+  height: 44px;
+  padding-inline: 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0f172a;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mc-input:focus {
+  background-color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.mc-input.has-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.mc-input.has-toggle {
+  padding-right: 4.25rem;
+}
+
+.mc-toggle-pass {
+  position: absolute;
+  right: 0.75rem;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.mc-toggle-pass:hover {
+  color: #0f172a;
+}
+
+.mc-error {
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: #dc2626;
+}
+
+/* ---------- INDICADOR DE FORÇA DA SENHA ---------- */
+.mc-strength {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.15rem;
+}
+
+.mc-strength-bars {
+  display: flex;
+  flex: 1;
+  gap: 0.35rem;
+}
+
+.mc-strength-bar {
+  height: 5px;
+  flex: 1;
+  border-radius: 9999px;
+  background-color: #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.mc-strength-bar.is-weak {
+  background-color: #ef4444;
+}
+
+.mc-strength-bar.is-medium {
+  background-color: #f59e0b;
+}
+
+.mc-strength-bar.is-strong {
+  background-color: #16a34a;
+}
+
+.mc-strength-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ---------- FEEDBACK E AÇÕES ---------- */
+.mc-alert {
+  padding: 0.75rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.825rem;
+  font-weight: 600;
+}
+
+.mc-alert--success {
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.mc-alert--error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.mc-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.mc-btn-save {
+  height: 42px;
+  padding-inline: 1.35rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.mc-btn-save:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.mc-btn-save:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .mc-actions {
+    justify-content: stretch;
+  }
+
+  .mc-btn-save {
+    width: 100%;
+  }
+}
+
+/* ---------- CARD DE SESSÃO ---------- */
+.mc-session-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+}
+
+.mc-btn-logout {
+  height: 40px;
+  padding-inline: 1.15rem;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+.mc-btn-logout:hover {
+  background-color: #fee2e2;
+}

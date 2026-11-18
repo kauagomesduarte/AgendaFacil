@@ -1,0 +1,308 @@
+/* ==========================================================================
+   AgendaFácil — Design System & Tokens (Azul #2563EB, Azul-Claro & Lavanda)
+   ========================================================================== */
+
+:root {
+  /* Azul Principal (Identidade AgendaFácil) */
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-900: #1e3a8a;
+
+  /* Complementares: Azul-Claro & Lavanda */
+  --color-sky-50: #f0f9ff;
+  --color-sky-100: #e0f2fe;
+  --color-sky-600: #0284c7;
+
+  --color-lavender-50: #f5f3ff;
+  --color-lavender-100: #ede9fe;
+  --color-lavender-200: #ddd6fe;
+  --color-violet-600: #7c3aed;
+  --color-indigo-800: #3730a3;
+
+  /* Neutros e Superfícies */
+  --color-bg-page: #ffffff;
+  --color-bg-subtle: #f8fafc;
+  --color-bg-muted: #f1f5f9;
+  --color-bg-dark: #0f172a;
+
+  /* Tipografia */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #ffffff;
+
+  /* Semântica */
+  --color-success-bg: #dcfce7;
+  --color-success-text: #15803d;
+  --color-warning-bg: #fef3c7;
+  --color-warning-text: #b45309;
+
+  /* Bordas */
+  --border-subtle: 1px solid #e2e8f0;
+  --border-default: 1px solid #cbd5e1;
+  --border-blue: 1px solid #bfdbfe;
+  --border-lavender: 1px solid #ddd6fe;
+
+  /* Raios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-full: 9999px;
+
+  /* Sombras Sutis (Flat Design 2.0) */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 14px 30px -10px rgba(15, 23, 42, 0.1), 0 4px 10px -4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 24px 48px -16px rgba(15, 23, 42, 0.14);
+  --shadow-blue: 0 10px 22px -8px rgba(37, 99, 235, 0.45);
+
+  /* Escala Tipográfica */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-3xl: clamp(1.85rem, 3vw, 2.35rem);
+  --text-hero: clamp(2.3rem, 4.5vw, 3.4rem);
+
+  /* Layout */
+  --container-max: 1180px;
+  --container-narrow: 1020px;
+  --header-height: 76px;
+  --section-py: clamp(4.5rem, 8vw, 6.5rem);
+  --gutter-x: clamp(1.25rem, 4vw, 3rem);
+
+  /* Transições */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 170ms;
+  --duration-base: 260ms;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, p, ul, ol {
+  margin: 0;
+}
+
+ul, ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-blue-200);
+  outline-offset: 2px;
+}
+
+.af-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter-x);
+}
+
+.af-container--narrow {
+  max-width: var(--container-narrow);
+}
+
+/* Cabeçalhos de Seção */
+.af-section-header {
+  max-width: 620px;
+  margin-inline: auto;
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.af-section-title {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+}
+
+.af-section-subtitle {
+  margin-top: 0.875rem;
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+}
+
+/* Botões Padronizados */
+.af-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.af-btn:hover {
+  transform: translateY(-1px);
+}
+
+.af-btn:active {
+  transform: translateY(0);
+}
+
+.af-btn--sm {
+  min-height: 40px;
+  padding: 0.55rem 1.1rem;
+  font-size: var(--text-xs);
+}
+
+.af-btn--lg {
+  min-height: 52px;
+  padding: 0.9rem 1.85rem;
+  font-size: var(--text-base);
+}
+
+.af-btn--primary {
+  background-color: var(--color-blue-600);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-blue);
+}
+
+.af-btn--primary:hover {
+  background-color: var(--color-blue-700);
+  box-shadow: 0 14px 26px -8px rgba(29, 78, 216, 0.52);
+}
+
+.af-btn--secondary {
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+  border: var(--border-default);
+  box-shadow: var(--shadow-xs);
+}
+
+.af-btn--secondary:hover {
+  background-color: var(--color-blue-50);
+  border-color: var(--color-blue-200);
+  color: var(--color-blue-600);
+  box-shadow: var(--shadow-sm);
+}
+
+.af-btn--ghost {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+}
+
+.af-btn--ghost:hover {
+  background-color: var(--color-blue-50);
+  color: var(--color-blue-600);
+}
+
+/* Campos Base (Login / Cadastro) */
+.af-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: var(--border-default);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.af-input:focus {
+  outline: none;
+  border-color: var(--color-blue-600);
+  box-shadow: 0 0 0 3px var(--color-blue-100);
+}
+
+/* Badges Semânticos */
+.af-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.af-badge--success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.af-badge--warning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.af-badge--blue {
+  background-color: var(--color-blue-100);
+  color: var(--color-blue-700);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

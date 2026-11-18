@@ -1,0 +1,128 @@
+/* ==========================================================================
+   Meus Horários do Funcionário — Tabela Semanal de Expediente
+   ========================================================================== */
+
+.hf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.hf-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.hf-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.hf-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.hf-btn-edit-toggle.is-editing {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+.hf-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.hf-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.hf-table th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.hf-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.hf-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.hf-day-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.hf-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.hf-status-pill.is-open {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.hf-status-pill.is-closed {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.hf-status-pill.is-editable {
+  border-color: #cbd5e1;
+  cursor: pointer;
+}
+
+.hf-input {
+  height: 36px;
+  padding-inline: 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #0f172a;
+}
+
+.hf-input:focus {
+  background-color: #ffffff;
+  border-color: #2563eb;
+  outline: none;
+}
+
+.hf-input--interval {
+  width: 145px;
+}
+
+.hf-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.75rem;
+}

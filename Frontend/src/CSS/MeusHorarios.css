@@ -1,0 +1,275 @@
+/* ==========================================================================
+   Página Meus Horários (Cliente) — Solicitações e Agendamentos
+   ========================================================================== */
+
+.mh-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.mh-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.mh-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.mh-btn-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 40px;
+  padding-inline: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px -2px rgba(37, 99, 235, 0.4);
+  transition: background-color 0.2s ease, transform 0.14s ease;
+}
+
+.mh-btn-new:hover {
+  background-color: #1d4ed8;
+}
+
+.mh-btn-new:active {
+  transform: scale(0.98);
+}
+
+/* ---------- FILTROS DE STATUS ---------- */
+.mh-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.35rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.mh-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.mh-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 34px;
+  padding-inline: 0.95rem;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.mh-filter-btn:hover:not(.is-active) {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.mh-filter-btn.is-active {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.mh-filter-count {
+  padding: 0.05rem 0.42rem;
+  border-radius: 9999px;
+  background-color: rgba(15, 23, 42, 0.08);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.mh-filter-btn.is-active .mh-filter-count {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+/* ---------- LISTA DE SOLICITAÇÕES ---------- */
+.mh-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.mh-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mh-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.07);
+}
+
+.mh-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.mh-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.mh-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.mh-card-company {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mh-card-service {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.mh-card-datetime {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.mh-card-datetime span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.mh-card-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- BADGES DE STATUS ---------- */
+.mh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mh-badge--pending {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.mh-badge--confirmed {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.mh-badge--cancelled {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.mh-btn-cancel {
+  height: 34px;
+  padding-inline: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+.mh-btn-cancel:hover:not(:disabled) {
+  background-color: #fee2e2;
+}
+
+.mh-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .mh-header {
+    align-items: stretch;
+  }
+
+  .mh-btn-new {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mh-card {
+    padding: 1rem;
+  }
+
+  .mh-card-right {
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 0.65rem;
+    border-top: 1px solid #f1f5f9;
+  }
+}
