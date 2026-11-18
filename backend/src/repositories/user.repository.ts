@@ -6,34 +6,38 @@ export async function createUser(data: Prisma.UserCreateInput){
     return await prisma.user.create({data});
 }
 
-export async function findById(userId: number): Promise<User | null> {
+export async function findById(userId: number) {
     return await prisma.user.findUnique({
         where: {
-            id : userId
-        }
-    });
-}
-
-export async function findByEmail(email: string): Promise<User | null> {
-    return await prisma.user.findUnique({
-        where: {
-            email : email
-        }
-    });
-}
-
-
-export async function updateUserById(userId: number, newData: Prisma.UserUpdateInput): Promise<User>{
-    const newUser = await prisma.user.update({
-        where:{
             id: userId
         },
-        data:{
-            ...newData
+        omit: {
+            password: true
         }
     });
+}
 
-    return newUser;
+export async function updateUserById(
+    userId: number,
+    newData: Prisma.UserUpdateInput
+) {
+    return await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: newData,
+        omit: {
+            password: true
+        }
+    });
+}
+
+export async function getUsers() {
+    return await prisma.user.findMany({
+        omit: {
+            password: true
+        }
+    });
 }
 
 export async function deleteUserById(userId: number): Promise<boolean>{
@@ -44,8 +48,4 @@ export async function deleteUserById(userId: number): Promise<boolean>{
     });
 
     return true;
-}
-
-export async function getUsers(): Promise<User[]>{
-    return await prisma.user.findMany();
 }

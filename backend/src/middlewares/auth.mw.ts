@@ -1,23 +1,29 @@
 import type { Request, Response, NextFunction } from "express";
 import { validateJWT } from "../utils/jwt.js";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import type { authDTO } from "../dtos/auth.dto.js";
+import { AppError } from "../utils/appError.js";
+import { authSchema } from "../dtos/auth.dto.js";
 
 export function validateToken(
     req: Request,
     res: Response,
     next: NextFunction
 ){
-    const token = req.cookies.token;
+    const token = req.cookies?.token;
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+
+        req.user = {
+            id: decoded.id,
+            email: decoded.email
+        }
 
         next();
     } catch (error) {
-        res.status(401).json({
-            message: "Token inválido ou expirado."
-        });
+        console.error('validateToken error:', error);
+        return next(new AppError("Unauthorized", 401));
     }
 
 }
@@ -26,20 +32,16 @@ export function validateLogin(
     req: Request,
     res: Response,
     next: NextFunction
-){
+) {
+    const result = authSchema.safeParse(req.body);
 
-    const { email, password } = req.body;
-
-    if(!email || !password) {
-        res.status(400).json({message: "Dados inválidos"});
+    if (!result.success) {
+        return res.status(400).json({
+            message: "Dados inválidos",
+            errors: result.error.flatten()
+        });
     }
 
-    const data: authDTO = {
-        email,
-        password
-    }
-
-    req.body = data;
-
+    req.body = result.data;
     next();
 }

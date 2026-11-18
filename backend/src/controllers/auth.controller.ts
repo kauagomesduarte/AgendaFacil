@@ -11,7 +11,7 @@ export async function authenticateUser(req: Request, res: Response){
         sameSite: "lax",
         maxAge: 60 * 60 * 1000
     });
-
+    
     res.status(200).json({
         message: "Logged in successfully."
     })
