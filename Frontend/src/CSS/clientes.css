@@ -1,0 +1,306 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+/* Fundo externo */
+
+.mobile-background {
+  min-height: 100vh;
+  background-color: #262626;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 18px;
+}
+
+.mobile-label {
+  color: #bdbdbd;
+  font-size: 12px;
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+/* Tela do celular */
+
+.mobile-screen {
+  width: 100%;
+  max-width: 390px;
+  min-height: 850px;
+  background-color: #ffffff;
+  padding: 28px 40px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho */
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #292929;
+}
+
+/* Saudação e pesquisa */
+
+.search-section {
+  width: 100%;
+}
+
+.greeting {
+  font-size: 10px;
+  color: #858585;
+  margin-bottom: 6px;
+}
+
+.search-box {
+  height: 47px;
+  width: 100%;
+  background-color: #f1f1f1;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.08);
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  color: #666666;
+  margin-right: 18px;
+}
+
+.search-box input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  color: #333333;
+}
+
+.search-box input::placeholder {
+  color: #a0a0a0;
+  opacity: 1;
+}
+
+/* Filtros */
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 19px;
+  margin-bottom: 20px;
+}
+
+.filter {
+  flex: 1;
+  height: 22px;
+  border: 1px solid #dddddd;
+  border-radius: 9px;
+  background-color: #ffffff;
+  color: #555555;
+  font-size: 9px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: 0.2s;
+}
+
+.filter.active {
+  background-color: #2864ed;
+  border-color: #2864ed;
+  color: white;
+  font-weight: 600;
+}
+
+.filter:hover {
+  transform: translateY(-1px);
+}
+
+/* Lista de estabelecimentos */
+
+.business-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.business-card {
+  width: 100%;
+  min-height: 55px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.06);
+}
+
+/* Ícones */
+
+.business-icon {
+  width: 65px;
+  min-width: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.business-icon span {
+  font-size: 27px;
+  filter: grayscale(1);
+}
+
+/* Informações */
+
+.business-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.business-info h2 {
+  font-size: 12px;
+  font-weight: 700;
+  color: #292929;
+  white-space: nowrap;
+  margin-bottom: 13px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 8px;
+  color: #333333;
+}
+
+.star {
+  color: #000000;
+  font-size: 12px;
+}
+
+/* Status e horários */
+
+.business-status {
+  min-width: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.status {
+  font-size: 9px;
+  font-weight: 500;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+}
+
+.status.open {
+  background-color: #21ce70;
+}
+
+.status.closed {
+  background-color: #bdbdbd;
+}
+
+.business-status p {
+  font-size: 9px;
+  color: #111111;
+  white-space: nowrap;
+}
+
+/* Navegação inferior */
+
+.bottom-navigation {
+  width: 175px;
+  height: 30px;
+  background-color: #f1f1f1;
+  border-radius: 9px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: auto auto 0;
+  padding: 0 8px;
+}
+
+.nav-item {
+  width: 35px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-item svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  color: #000000;
+}
+
+.nav-item.selected svg {
+  color: #2864ed;
+}
+
+/* Responsividade */
+
+@media (max-width: 480px) {
+  .mobile-background {
+    padding: 0;
+    background-color: white;
+  }
+
+  .mobile-label {
+    display: none;
+  }
+
+  .mobile-screen {
+    min-height: 100vh;
+    max-width: 100%;
+    padding: 28px 20px 20px;
+  }
+
+  .business-icon {
+    width: 45px;
+    min-width: 45px;
+  }
+
+  .business-status {
+    min-width: 110px;
+  }
+
+  .business-info h2 {
+    font-size: 11px;
+  }
+
+  .business-status p {
+    font-size: 8px;
+  }
+}
