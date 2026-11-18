@@ -7,6 +7,12 @@ export interface UserDTO{
     email: string
 }
 
+export interface PublicUserDTO {
+    id: number;
+    name: string | null;
+    email: string;
+}
+
 
 export const createUserSchema = z.object({
     name: z.string().min(3),

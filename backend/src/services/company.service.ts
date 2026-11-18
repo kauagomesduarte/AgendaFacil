@@ -49,6 +49,7 @@ export async function deleteCompany(companyId: number){
        return await companyRepository.deleteCompany(companyId)
 
     } catch (error) {
+        if (error instanceof AppError) throw error;
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
             throw new AppError("Company not found", 404);
         }

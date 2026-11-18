@@ -8,10 +8,12 @@ import employeeRoutes from "./employee.routes.js";
 router.use("/:companyId/emp", employeeRoutes);
 
 import servicesRoutes from "./services.routes.js";
+import companyAppointmentsRoutes from "./company-appointments.routes.js";
 import { validate } from '../middlewares/zodValidate.mw.js';
 import { createCompanySchema, updateCompanySchema } from '../dtos/company.dto.js';
 import { authorizeByRole } from '../middlewares/authorization.mw.js';
 router.use("/:companyId/serv", servicesRoutes);
+router.use("/:companyId/appointments", companyAppointmentsRoutes);
 
 router.post(
     "/",
@@ -38,6 +40,7 @@ router.patch(
 
 router.delete(
     "/:id",
+    authorizeByRole(["OWNER"]),
     deleteCompany
 );
 

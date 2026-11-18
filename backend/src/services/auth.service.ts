@@ -1,4 +1,3 @@
-import type { Jwt } from "jsonwebtoken";
 import type { UserDTO } from "../dtos/user.dto.js";
 import { findByEmail } from "../repositories/user.repository.js";
 import { createJWT } from "../utils/jwt.js";
@@ -12,7 +11,7 @@ export async function authenticateUser(email: string, password: string): Promise
     const correctPassword = await bcrypt.compare(password, existingUser.password);
     if (!correctPassword) throw new AppError("Incorrect password", 400);
 
-    const payload: Object = {
+    const payload = {
         id: existingUser.id,
         email: existingUser.email
     }

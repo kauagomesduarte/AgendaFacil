@@ -12,4 +12,7 @@ router.use("/auth", authRoutes)
 import companyRoutes from "./company.routes.js"
 router.use("/comp", validateToken, companyRoutes)
 
+import bookingRoutes from "./appointments.routes.js";
+router.use("/booking", bookingRoutes);
+
 export default router;

@@ -1,6 +1,7 @@
 
 import * as serviceRepository from "../repositories/services.repository.js";
 import { AppError } from "../utils/appError.js";
+import { hasPostgresErrorCode } from "../utils/prismaErrors.js";
 
 export async function createService(
     companyId: number,
@@ -124,10 +125,18 @@ export async function assignEmployeeService(
         throw new AppError("Employee not found.", 404);
     }
 
-    return serviceRepository.assignService(
-        employeeId,
-        serviceId
-    );
+    try {
+        return await serviceRepository.assignService(
+            companyId,
+            employeeId,
+            serviceId
+        );
+    } catch (error) {
+        if (hasPostgresErrorCode(error, "P2002")) {
+            throw new AppError("Employee is already assigned to this service.", 409);
+        }
+        throw error;
+    }
 }
 
 export async function removeEmployeeService(
@@ -154,6 +163,7 @@ export async function removeEmployeeService(
     }
 
     return serviceRepository.removeServiceAssignment(
+        companyId,
         employeeId,
         serviceId
     );
@@ -172,5 +182,5 @@ export async function getEmployeeServices(
         throw new AppError("Employee not found.", 404);
     }
 
-    return serviceRepository.findEmployeeServices(employeeId);
+    return serviceRepository.findEmployeeServices(employeeId, companyId);
 }

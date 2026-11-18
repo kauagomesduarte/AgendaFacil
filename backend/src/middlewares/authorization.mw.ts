@@ -14,7 +14,7 @@ export function authorizeByRole(roles: CompanyRole[]) {
         const reqUserId = user?.id;
         if (!user || !reqUserId) throw new AppError("No authentication", 401);
 
-        const companyId = Number(req.params.companyId);
+        const companyId = Number(req.params.companyId ?? req.params.id);
         if (!Number.isInteger(companyId) || companyId <= 0) {
             throw new AppError("Invalid company ID", 400);
         }

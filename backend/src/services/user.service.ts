@@ -1,12 +1,11 @@
 import * as userRepository from "../repositories/user.repository.js";
-import type { UpdateUserDTO, UserDTO } from "../dtos/user.dto.js";
-import type { User } from "../../generated/prisma/browser.js";
+import type { CreateUserDTO, PublicUserDTO, UpdateUserDTO } from "../dtos/user.dto.js";
 import bcrypt from 'bcrypt';
 import { AppError } from "../utils/appError.js";
 
 
  
-export async function createUser(data: UserDTO): Promise<void>{
+export async function createUser(data: CreateUserDTO): Promise<void>{
     if(!data){throw new Error("Invalid data.");}
 
     const existingUser = await userRepository.findByEmail(data.email);
@@ -20,7 +19,7 @@ export async function createUser(data: UserDTO): Promise<void>{
     await userRepository.createUser(newData);
 }
 
-export async function findById(userId: number): Promise<User>{
+export async function findById(userId: number): Promise<PublicUserDTO>{
     const user = await userRepository.findById(userId);
 
     if (!user) throw new AppError("Usuário não encontrado", 400);
@@ -28,7 +27,7 @@ export async function findById(userId: number): Promise<User>{
     return user;
 }
 
-export async function updateUserById(userId: number, newData: UpdateUserDTO): Promise<UserDTO>{
+export async function updateUserById(userId: number, newData: UpdateUserDTO): Promise<PublicUserDTO>{
     let cleanedData = Object.fromEntries(
         Object.entries(newData).filter(([key, value]) => value !== undefined)
     );
@@ -49,6 +48,6 @@ export async function deleteUserById(userId: number): Promise<void>{
     if(!result) throw new AppError("Usuário inválido", 400);
 }
 
-export async function getUsers(): Promise<User[]>{
+export async function getUsers(): Promise<PublicUserDTO[]>{
     return await userRepository.getUsers();
 }

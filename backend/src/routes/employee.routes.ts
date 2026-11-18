@@ -5,6 +5,9 @@ import { addEmployee, findAllEmployee, findEmployee, removeEmployee, updateRole 
 
 const router = Router({mergeParams: true});
 
+import schedulesRoutes from "./schedules.routes.js";
+router.use("/:employeeId/schedules", schedulesRoutes);
+
 router.post(
     "/",
     validateToken,
