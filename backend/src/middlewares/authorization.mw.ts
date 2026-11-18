@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { findEmployee, findEmployeeById } from "../repositories/employee.repository.js";
 import { AppError } from "../utils/appError.js";
 import  { CompanyRole } from "../../generated/prisma/enums.js";
+import { prisma } from "../libs/prisma.js";
 
 export function authorizeByRole(roles: CompanyRole[]) {
     
@@ -17,6 +18,14 @@ export function authorizeByRole(roles: CompanyRole[]) {
         const companyId = Number(req.params.companyId ?? req.params.id);
         if (!Number.isInteger(companyId) || companyId <= 0) {
             throw new AppError("Invalid company ID", 400);
+        }
+
+        const company = await prisma.company.findUnique({
+            where: { id: companyId },
+            select: { id: true }
+        });
+        if (!company) {
+            throw new AppError("Company not found", 404);
         }
 
         const reqEmployeeData = await findEmployee(reqUserId, companyId);

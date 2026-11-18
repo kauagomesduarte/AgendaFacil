@@ -21,7 +21,6 @@ export async function addEmployee(
     next: NextFunction
 ) {
     try {
-        console.log("chegou aqui")
         const companyId = parseId(req.params.companyId);
         const userId = parseId(req.body.userId);
         const { role } = req.body as { role: CompanyRole };
@@ -90,7 +89,6 @@ export async function findAllEmployee(
     next: NextFunction
 ) {
     try {
-        console.log("chegou aqui")
         const companyId = parseId(req.params.companyId);
 
         const employees = await employeeService.findAllEmployee(companyId);

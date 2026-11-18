@@ -17,12 +17,14 @@ router.post(
 
 router.get(
     "/",
+    validateToken,
     authorizeByRole(["EMPLOYEE", "MANAGER", "OWNER"]),
     findAllEmployee
 );
 
 router.get(
     "/:userId",
+    validateToken,
     authorizeByRole(["EMPLOYEE", "MANAGER", "OWNER"]),
     findEmployee
 );

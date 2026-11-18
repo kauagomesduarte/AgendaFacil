@@ -2,6 +2,7 @@ import * as userRepository from "../repositories/user.repository.js";
 import type { CreateUserDTO, PublicUserDTO, UpdateUserDTO } from "../dtos/user.dto.js";
 import bcrypt from 'bcrypt';
 import { AppError } from "../utils/appError.js";
+import { Prisma } from "../../generated/prisma/client.js";
 
 
  
@@ -22,7 +23,7 @@ export async function createUser(data: CreateUserDTO): Promise<void>{
 export async function findById(userId: number): Promise<PublicUserDTO>{
     const user = await userRepository.findById(userId);
 
-    if (!user) throw new AppError("Usuário não encontrado", 400);
+    if (!user) throw new AppError("Usuário não encontrado", 404);
 
     return user;
 }
@@ -39,8 +40,17 @@ export async function updateUserById(userId: number, newData: UpdateUserDTO): Pr
         }
     }
 
-    const user = await userRepository.updateUserById(userId, cleanedData);
-    return user;   
+    try {
+        return await userRepository.updateUserById(userId, cleanedData);
+    } catch (error) {
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2025"
+        ) {
+            throw new AppError("Usuário não encontrado", 404);
+        }
+        throw error;
+    }
 }
 
 export async function deleteUserById(userId: number): Promise<void>{

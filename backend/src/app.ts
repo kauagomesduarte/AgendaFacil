@@ -9,6 +9,11 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(router);
+app.use((_req, res) => {
+    return res.status(404).json({
+        message: "Route not found"
+    });
+});
 // Tratamento global de erros
 app.use(errorHandler);
 
