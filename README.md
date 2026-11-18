@@ -116,6 +116,13 @@ npm install
 
 Crie o arquivo `backend/.env` com as seguintes variáveis:
 
+Você pode iniciar a partir de `backend/.env.example`:
+
+```bash
+cd backend
+copy .env.example .env
+```
+
 ```env
 DATABASE_URL="postgresql://usuario:senha@localhost:5432/agendafacil"
 JWT_SECRET="substitua_por_um_segredo_seguro"
@@ -131,6 +138,13 @@ FRONTEND_URL="http://localhost:5173"
 Não confirme credenciais reais ou o arquivo `backend/.env` no repositório.
 
 Opcionalmente, crie `Frontend/.env` para apontar o frontend a uma API remota:
+
+Você pode iniciar a partir de `Frontend/.env.example`:
+
+```bash
+cd Frontend
+copy .env.example .env
+```
 
 ```env
 VITE_API_URL="http://localhost:3000"
