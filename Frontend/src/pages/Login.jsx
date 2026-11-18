@@ -32,14 +32,20 @@ export default function Login() {
       ? 'Digite um e-mail válido.'
       : '';
 
-  const senhaError = !senha && submitted ? 'Informe sua senha.' : '';
+  const senhaError = !senha
+    ? submitted
+      ? 'Informe sua senha.'
+      : ''
+    : (touched.senha || submitted) && senha.length < 8
+      ? 'A senha deve ter pelo menos 8 caracteres.'
+      : '';
 
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitted(true);
     setErroApi('');
 
-    if (!email.trim() || !isEmailValid || !senha) {
+    if (!email.trim() || !isEmailValid || senha.length < 8) {
       setShakeCount((prev) => prev + 1);
       return;
     }
@@ -104,7 +110,7 @@ export default function Login() {
               if (erroApi) setErroApi('');
             }}
             onBlur={() => setTouched((prev) => ({ ...prev, senha: true }))}
-            placeholder="Digite sua senha"
+            placeholder="Mínimo 8 caracteres"
             autoComplete="current-password"
             error={senhaError}
           />
@@ -135,7 +141,7 @@ export default function Login() {
         >
           <div className="af-collapse__inner">
             <p className="af-auth-notice" role="status">
-              Para recuperar o acesso à sua conta, entre em contato com o suporte ou com o administrador do seu estabelecimento.
+              A recuperação automática de senha ainda não está disponível na API. Entre em contato com o suporte ou com o administrador do estabelecimento.
             </p>
           </div>
         </div>

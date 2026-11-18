@@ -192,7 +192,7 @@ export function AuthSelect({
 export function PasswordStrengthMeter({ password = '' }) {
   const isOpen = password.length > 0;
 
-  const hasMinLen = password.length >= 6;
+  const hasMinLen = password.length >= 8;
   const hasLettersAndNumbers = /[A-Za-z]/.test(password) && /\d/.test(password);
   const hasUpperOrSymbol = /[A-Z]/.test(password) || /[^A-Za-z0-9]/.test(password);
 
@@ -201,7 +201,7 @@ export function PasswordStrengthMeter({ password = '' }) {
   const levelLabel = score <= 1 ? 'Fraca' : score === 2 ? 'Média' : 'Forte';
 
   const hint = !hasMinLen
-    ? 'mínimo 6 caracteres'
+    ? 'mínimo 8 caracteres'
     : !hasLettersAndNumbers
       ? 'combine letras e números'
       : !hasUpperOrSymbol

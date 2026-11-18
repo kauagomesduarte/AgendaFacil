@@ -1,0 +1,386 @@
+/* ==========================================================================
+   Layout Base do Painel do Funcionário — Autônomo e Responsivo
+   ========================================================================== */
+
+.func-layout,
+.func-layout *,
+.func-layout *::before,
+.func-layout *::after {
+  box-sizing: border-box;
+}
+
+.func-layout {
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: inherit;
+}
+
+/* ---------- SIDEBAR LATERAL ---------- */
+.func-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  width: 245px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  padding: 1.75rem 0;
+}
+
+.func-sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.func-logo {
+  margin: 0;
+  padding-inline: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.func-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.func-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.78rem 1.5rem;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.925rem;
+  font-weight: 500;
+  color: #334155;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.func-menu-btn:hover:not(.is-active) {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.func-menu-btn.is-active {
+  background-color: #dbeafe;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.func-menu-badge {
+  margin-left: auto;
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ---------- RODAPÉ DO PERFIL ---------- */
+.func-sidebar-bottom {
+  padding: 1.25rem 1.5rem 0;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.func-user-box {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.func-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1.5px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.func-user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.func-user-info strong {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.func-user-info span {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.func-btn-sair {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.func-btn-sair:hover {
+  color: #dc2626;
+}
+
+/* ---------- ÁREA DE CONTEÚDO ---------- */
+.func-main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem;
+}
+
+.func-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 2px 10px -4px rgba(15, 23, 42, 0.04);
+}
+
+.func-toast {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ---------- BOTÕES PADRÃO ---------- */
+.func-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  height: 38px;
+  padding-inline: 1rem;
+  border-radius: 9px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #334155;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.func-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.func-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.func-btn--primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.func-btn--primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.func-btn--danger {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.func-btn--danger:hover:not(:disabled) {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+/* ---------- MODAL GENÉRICO ---------- */
+.func-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.func-modal {
+  width: 100%;
+  max-width: 440px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.25);
+}
+
+.func-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.15rem;
+}
+
+.func-modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.func-modal-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+.func-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.func-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.func-field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.func-field input,
+.func-field select {
+  height: 40px;
+  padding-inline: 0.8rem;
+  border-radius: 9px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #0f172a;
+  outline: none;
+}
+
+.func-field input:focus,
+.func-field select:focus {
+  background-color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+/* ---------- RESPONSIVIDADE MOBILE / TABLET ---------- */
+@media (max-width: 820px) {
+  .func-layout {
+    flex-direction: column;
+  }
+
+  .func-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 1rem 1rem 0.75rem;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .func-sidebar-top {
+    gap: 0.85rem;
+  }
+
+  .func-logo {
+    padding-inline: 0.25rem;
+    font-size: 1.3rem;
+  }
+
+  .func-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.4rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .func-menu-btn {
+    width: auto;
+    padding: 0.55rem 0.9rem;
+    border-radius: 9999px;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  .func-sidebar-bottom {
+    display: none;
+  }
+
+  .func-main {
+    padding: 1.15rem 1rem 2rem;
+  }
+
+  .func-card {
+    padding: 1.25rem;
+  }
+}

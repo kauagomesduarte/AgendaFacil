@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import {
@@ -8,32 +8,30 @@ import {
   PasswordStrengthMeter,
 } from '../components/AuthField';
 import Botao from '../components/Botao';
-import { cadastrarUsuario } from '../services/authService';
+import {
+  cadastrarEmpresaCompleto,
+  cadastrarUsuario,
+} from '../services/authService';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function formatarTelefone(valor) {
-  const digitos = valor.replace(/\D/g, '').slice(0, 11);
-  if (digitos.length <= 2) return digitos.length ? `(${digitos}` : '';
-  if (digitos.length <= 6) return `(${digitos.slice(0, 2)}) ${digitos.slice(2)}`;
-  if (digitos.length <= 10) {
-    return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 6)}-${digitos.slice(6)}`;
-  }
-  return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 7)}-${digitos.slice(7)}`;
-}
+const FUSOS_BRASIL = [
+  { value: 'America/Sao_Paulo', label: 'Brasília / São Paulo (GMT-3)' },
+  { value: 'America/Fortaleza', label: 'Nordeste / Fortaleza (GMT-3)' },
+  { value: 'America/Manaus', label: 'Amazonas / Manaus (GMT-4)' },
+  { value: 'America/Cuiaba', label: 'Mato Grosso / Cuiabá (GMT-4)' },
+  { value: 'America/Rio_Branco', label: 'Acre / Rio Branco (GMT-5)' },
+  { value: 'America/Noronha', label: 'Fernando de Noronha (GMT-2)' },
+];
 
 export default function Cadastro() {
   const navigate = useNavigate();
 
   const [tipoUsuario, setTipoUsuario] = useState('cliente');
-  const [cidades, setCidades] = useState([]);
-  const [carregandoCidades, setCarregandoCidades] = useState(true);
-
   const [nome, setNome] = useState('');
-  const [telefone, setTelefone] = useState('');
+  const [nomeEmpresa, setNomeEmpresa] = useState('');
+  const [timeZone, setTimeZone] = useState('America/Sao_Paulo');
   const [email, setEmail] = useState('');
-  const [tipoEstabelecimento, setTipoEstabelecimento] = useState('');
-  const [cidade, setCidade] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [aceitouTermos, setAceitouTermos] = useState(false);
@@ -45,21 +43,8 @@ export default function Cadastro() {
   const [carregando, setCarregando] = useState(false);
   const [erroApi, setErroApi] = useState('');
 
-  useEffect(() => {
-    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome')
-      .then((resposta) => resposta.json())
-      .then((dados) => {
-        if (Array.isArray(dados)) {
-          setCidades(dados);
-        }
-      })
-      .catch((erro) => console.error('Erro ao carregar cidades:', erro))
-      .finally(() => setCarregandoCidades(false));
-  }, []);
-
   const isEmpresa = tipoUsuario === 'empresa';
   const isEmailValid = EMAIL_REGEX.test(email.trim());
-  const telefoneDigitos = telefone.replace(/\D/g, '');
 
   function handleTrocarTipo(novoTipo) {
     if (novoTipo === tipoUsuario) return;
@@ -73,11 +58,27 @@ export default function Cadastro() {
     setTouched((prev) => ({ ...prev, [field]: true }));
   }
 
-  const nomeError = !nome.trim() && submitted
-    ? isEmpresa
-      ? 'Informe o nome da empresa.'
-      : 'Informe seu nome completo.'
+  const nomeError = !nome.trim()
+    ? submitted
+      ? 'Informe seu nome completo.'
+      : ''
+    : (touched.nome || submitted) && nome.trim().length < 3
+      ? 'O nome deve ter pelo menos 3 caracteres.'
+      : '';
+
+  const empresaError = isEmpresa
+    ? !nomeEmpresa.trim()
+      ? submitted
+        ? 'Informe o nome da empresa.'
+        : ''
+      : (touched.nomeEmpresa || submitted) &&
+          (nomeEmpresa.trim().length < 3 || nomeEmpresa.trim().length > 150)
+        ? 'Entre 3 e 150 caracteres.'
+        : ''
     : '';
+
+  const timeZoneError =
+    isEmpresa && !timeZone && submitted ? 'Selecione o fuso horário.' : '';
 
   const emailError = !email.trim()
     ? submitted
@@ -87,29 +88,12 @@ export default function Cadastro() {
       ? 'Digite um e-mail válido.'
       : '';
 
-  const telefoneError = !isEmpresa
-    ? telefoneDigitos.length === 0
-      ? submitted
-        ? 'Informe seu número de contato.'
-        : ''
-      : (touched.telefone || submitted) && telefoneDigitos.length < 10
-        ? 'Digite um telefone com DDD.'
-        : ''
-    : '';
-
-  const estabelecimentoError =
-    isEmpresa && !tipoEstabelecimento && submitted
-      ? 'Selecione o tipo de estabelecimento.'
-      : '';
-
-  const cidadeError = !cidade && submitted ? 'Selecione sua cidade.' : '';
-
   const senhaError = !senha
     ? submitted
       ? 'Crie uma senha.'
       : ''
-    : (touched.senha || submitted) && senha.length < 6
-      ? 'Use pelo menos 6 caracteres.'
+    : (touched.senha || submitted) && senha.length < 8
+      ? 'A senha deve ter pelo menos 8 caracteres.'
       : '';
 
   const confirmarError = !confirmarSenha
@@ -127,10 +111,9 @@ export default function Cadastro() {
 
   const hasAnyVisibleError = Boolean(
     nomeError ||
+      empresaError ||
+      timeZoneError ||
       emailError ||
-      telefoneError ||
-      estabelecimentoError ||
-      cidadeError ||
       senhaError ||
       confirmarError ||
       termosError ||
@@ -143,15 +126,13 @@ export default function Cadastro() {
     setErroApi('');
 
     const isInvalid =
-      !nome.trim() ||
-      !email.trim() ||
+      nome.trim().length < 3 ||
       !isEmailValid ||
-      (!isEmpresa && telefoneDigitos.length < 10) ||
-      (isEmpresa && !tipoEstabelecimento) ||
-      !cidade ||
-      !senha ||
-      senha.length < 6 ||
-      !confirmarSenha ||
+      (isEmpresa &&
+        (nomeEmpresa.trim().length < 3 ||
+          nomeEmpresa.trim().length > 150 ||
+          !timeZone)) ||
+      senha.length < 8 ||
       senha !== confirmarSenha ||
       !aceitouTermos;
 
@@ -162,13 +143,24 @@ export default function Cadastro() {
 
     try {
       setCarregando(true);
-      await cadastrarUsuario({
-        name: nome.trim(),
-        email: email.trim(),
-        password: senha,
-      });
 
-      navigate('/login', { state: { cadastroSucesso: true } });
+      if (isEmpresa) {
+        await cadastrarEmpresaCompleto({
+          name: nome.trim(),
+          companyName: nomeEmpresa.trim(),
+          email: email.trim(),
+          password: senha,
+          timeZone,
+        });
+        navigate('/servicos');
+      } else {
+        await cadastrarUsuario({
+          name: nome.trim(),
+          email: email.trim(),
+          password: senha,
+        });
+        navigate('/login', { state: { cadastroSucesso: true } });
+      }
     } catch (erro) {
       setErroApi(erro.message);
       setShakeCount((prev) => prev + 1);
@@ -184,7 +176,7 @@ export default function Cadastro() {
       title="Criar conta"
       subtitle={
         isEmpresa
-          ? 'Cadastre seu estabelecimento para gerenciar horários e clientes.'
+          ? 'Crie sua conta e configure sua empresa em um só passo.'
           : 'Crie sua conta para agendar horários com rapidez.'
       }
       wide
@@ -202,7 +194,7 @@ export default function Cadastro() {
 
           <div key={tipoUsuario} className="af-auth-dynamic-group">
             <AuthInput
-              label={isEmpresa ? 'Nome da Empresa' : 'Nome completo'}
+              label={isEmpresa ? 'Seu nome (responsável)' : 'Nome completo'}
               type="text"
               value={nome}
               onChange={(e) => {
@@ -210,10 +202,43 @@ export default function Cadastro() {
                 if (erroApi) setErroApi('');
               }}
               onBlur={() => markTouched('nome')}
-              placeholder={isEmpresa ? 'Ex: Barbearia Central' : 'Ex: João Silva'}
-              autoComplete={isEmpresa ? 'organization' : 'name'}
+              placeholder="Ex: João Silva"
+              autoComplete="name"
               error={nomeError}
             />
+
+            {isEmpresa && (
+              <div className="af-auth-grid-2">
+                <AuthInput
+                  label="Nome da Empresa"
+                  type="text"
+                  value={nomeEmpresa}
+                  onChange={(e) => {
+                    setNomeEmpresa(e.target.value);
+                    if (erroApi) setErroApi('');
+                  }}
+                  onBlur={() => markTouched('nomeEmpresa')}
+                  placeholder="Ex: Barbearia Central"
+                  autoComplete="organization"
+                  error={empresaError}
+                />
+
+                <AuthSelect
+                  label="Fuso horário"
+                  value={timeZone}
+                  onChange={(e) => setTimeZone(e.target.value)}
+                  onBlur={() => markTouched('timeZone')}
+                  placeholder="Selecione"
+                  error={timeZoneError}
+                >
+                  {FUSOS_BRASIL.map((fuso) => (
+                    <option key={fuso.value} value={fuso.value}>
+                      {fuso.label}
+                    </option>
+                  ))}
+                </AuthSelect>
+              </div>
+            )}
 
             <AuthInput
               label="E-mail"
@@ -228,55 +253,6 @@ export default function Cadastro() {
               autoComplete="email"
               error={emailError}
             />
-
-            <div className="af-auth-grid-2">
-              {isEmpresa ? (
-                <AuthSelect
-                  label="Tipo de Estabelecimento"
-                  value={tipoEstabelecimento}
-                  onChange={(e) => setTipoEstabelecimento(e.target.value)}
-                  onBlur={() => markTouched('tipoEstabelecimento')}
-                  placeholder="Selecione"
-                  error={estabelecimentoError}
-                >
-                  <option value="barbearia">Barbearia</option>
-                  <option value="clinica">Clínica</option>
-                </AuthSelect>
-              ) : (
-                <AuthInput
-                  label="Número de contato"
-                  type="tel"
-                  inputMode="tel"
-                  value={telefone}
-                  onChange={(e) => setTelefone(formatarTelefone(e.target.value))}
-                  onBlur={() => markTouched('telefone')}
-                  placeholder="(11) 99999-9999"
-                  autoComplete="tel"
-                  maxLength={15}
-                  error={telefoneError}
-                />
-              )}
-
-              <AuthSelect
-                label="Cidade"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-                onBlur={() => markTouched('cidade')}
-                placeholder={
-                  carregandoCidades && cidades.length === 0
-                    ? 'Carregando...'
-                    : 'Selecione'
-                }
-                disabled={carregandoCidades && cidades.length === 0}
-                error={cidadeError}
-              >
-                {cidades.map((item) => (
-                  <option key={item.id} value={item.nome}>
-                    {item.nome} - {item?.microrregiao?.mesorregiao?.UF?.sigla || 'BR'}
-                  </option>
-                ))}
-              </AuthSelect>
-            </div>
           </div>
 
           <div>
@@ -290,7 +266,7 @@ export default function Cadastro() {
                   if (erroApi) setErroApi('');
                 }}
                 onBlur={() => markTouched('senha')}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
                 error={senhaError}
               />
@@ -299,7 +275,10 @@ export default function Cadastro() {
                 label="Confirmar senha"
                 type="password"
                 value={confirmarSenha}
-                onChange={(e) => setConfirmarSenha(e.target.value)}
+                onChange={(e) => {
+                  setConfirmarSenha(e.target.value);
+                  if (erroApi) setErroApi('');
+                }}
                 onBlur={() => markTouched('confirmarSenha')}
                 placeholder="Repita a senha"
                 autoComplete="new-password"

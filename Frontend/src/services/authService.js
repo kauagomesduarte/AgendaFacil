@@ -1,51 +1,43 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
-async function request(endpoint, body) {
-  let response;
-
-  try {
-    response = await fetch(`${API_URL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-  } catch {
-    throw new Error('Não foi possível conectar ao servidor. Verifique sua conexão.');
-  }
-
-  const data = await response.json().catch(() => null);
-
-  if (!response.ok) {
-    const mensagemErro =
-      data?.message ||
-      data?.error ||
-      (response.status === 401
-        ? 'E-mail ou senha inválidos.'
-        : 'Não foi possível concluir a solicitação.');
-
-    throw new Error(Array.isArray(mensagemErro) ? mensagemErro[0] : mensagemErro);
-  }
-
-  return data;
-}
+import { apiFetch } from './api';
 
 export async function loginUsuario({ email, password }) {
-  const data = await request('/auth/login', { email, password });
-
-  const token = data?.token || data?.access_token || data?.accessToken;
-  if (token) {
-    localStorage.setItem('token', token);
-  }
-
-  if (data?.user) {
-    localStorage.setItem('user', JSON.stringify(data.user));
-  }
-
-  return data;
+  // POST /auth/login -> 200 {"message": "Logged in successfully."} + cookie HTTP-only "token"
+  return apiFetch('/auth/login', {
+    method: 'POST',
+    body: { email, password },
+  });
 }
 
 export async function cadastrarUsuario({ name, email, password }) {
-  return request('/users', { name, email, password });
+  // POST /users -> 201 {"message": "Usuário criado"}
+  return apiFetch('/users', {
+    method: 'POST',
+    body: { name, email, password },
+  });
+}
+
+export async function criarEmpresa({ name, timeZone = 'America/Sao_Paulo' }) {
+  // POST /comp -> 201 {"id": 1, "name": "...", "timeZone": "..."} (torna o usuário OWNER)
+  const empresa = await apiFetch('/comp', {
+    method: 'POST',
+    body: { name, timeZone },
+  });
+
+  if (empresa?.id) {
+    localStorage.setItem('companyId', String(empresa.id));
+  }
+
+  return empresa;
+}
+
+export async function cadastrarEmpresaCompleto({
+  name,
+  companyName,
+  email,
+  password,
+  timeZone,
+}) {
+  await cadastrarUsuario({ name, email, password });
+  await loginUsuario({ email, password });
+  return criarEmpresa({ name: companyName, timeZone });
 }
