@@ -1,0 +1,358 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", Arial, sans-serif;
+  background-color: white;
+}
+
+/* LAYOUT */
+
+.agenda-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: white;
+  color: #292929;
+}
+
+/* SIDEBAR */
+
+.agenda-sidebar {
+  width: 190px;
+  min-width: 190px;
+  height: 100vh;
+  background-color: #f7f9fc;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.agenda-logo {
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #292929;
+  margin: 43px 0 55px 27px;
+}
+
+/* MENU */
+
+.agenda-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agenda-menu-item {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  gap: 10px;
+  padding: 0 18px;
+  color: #333333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.agenda-menu-item:hover {
+  background-color: #edf3ff;
+}
+
+.agenda-icon {
+  width: 17px;
+  text-align: center;
+  font-size: 17px;
+}
+
+.agenda-active {
+  background-color: #dceaff;
+  color: #2149c7;
+  font-weight: 600;
+}
+
+.agenda-active .agenda-icon {
+  color: #2149c7;
+}
+
+/* SIDEBAR INFERIOR */
+
+.agenda-sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid #c8c8c8;
+  padding: 14px 12px 12px;
+}
+
+.agenda-company {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.agenda-avatar {
+  width: 23px;
+  height: 23px;
+  border: 2px solid #222222;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+}
+
+.agenda-company p {
+  font-size: 13px;
+  color: #333333;
+}
+
+.agenda-company small {
+  display: block;
+  font-size: 9px;
+  color: #7187a7;
+}
+
+.agenda-logout {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #333333;
+  cursor: pointer;
+  padding: 3px 8px;
+}
+
+.agenda-logout span {
+  font-size: 18px;
+}
+
+/* CONTEÚDO PRINCIPAL */
+
+.agenda-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 25px;
+  padding: 31px 36px;
+}
+
+/* CALENDÁRIO */
+
+.agenda-calendar-card {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(100vh - 62px);
+  background-color: #f7f9fc;
+  border: 1px solid #e0e3e7;
+  border-radius: 9px;
+  padding: 17px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.agenda-calendar-card h1 {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* MÊS */
+
+.agenda-month {
+  text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+/* GRID CALENDÁRIO */
+
+.agenda-calendar-grid {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  flex: 1;
+  max-height: 406px;
+  border-top: 1px solid #222222;
+  border-left: 1px solid #222222;
+}
+
+/* DIAS */
+
+.agenda-day {
+  min-height: 0;
+  border-right: 1px solid #222222;
+  border-bottom: 1px solid #222222;
+  display: flex;
+  align-items: flex-start;
+  padding: 9px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #292929;
+}
+
+.agenda-next-month {
+  color: #999999;
+}
+
+/* PAINEL HOJE */
+
+.agenda-today-card {
+  width: 228px;
+  min-width: 228px;
+  min-height: calc(100vh - 62px);
+  background-color: #f7f9fc;
+  border: 1px solid #e0e3e7;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.agenda-today-card h2 {
+  font-size: 19px;
+  font-weight: 700;
+  padding: 17px 26px 11px;
+  border-bottom: 1px solid #e0e3e7;
+}
+
+/* LISTA DE AGENDAMENTOS */
+
+.agenda-appointments {
+  display: flex;
+  flex-direction: column;
+}
+
+.agenda-appointment {
+  min-height: 89px;
+  border-bottom: 1px solid #e0e3e7;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 25px 8px;
+}
+
+/* DETALHES */
+
+.appointment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.appointment-details strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.appointment-details span {
+  font-size: 13px;
+}
+
+/* HORÁRIO */
+
+.appointment-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.appointment-time strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.appointment-status {
+  font-size: 12px;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 1100px) {
+  .agenda-main {
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .agenda-calendar-card {
+    padding: 17px;
+  }
+
+  .agenda-today-card {
+    width: 200px;
+    min-width: 200px;
+  }
+
+  .agenda-appointment {
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 750px) {
+  .agenda-sidebar {
+    width: 65px;
+    min-width: 65px;
+  }
+
+  .agenda-logo {
+    font-size: 0;
+    margin: 25px auto 40px;
+  }
+
+  .agenda-logo::after {
+    content: "AF";
+    font-size: 18px;
+  }
+
+  .agenda-menu-item {
+    justify-content: center;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .agenda-icon {
+    font-size: 19px;
+  }
+
+  .agenda-company div:last-child,
+  .agenda-logout {
+    display: none;
+  }
+
+  .agenda-company {
+    justify-content: center;
+  }
+
+  .agenda-main {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .agenda-calendar-card {
+    min-height: 500px;
+  }
+
+  .agenda-today-card {
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+  }
+
+  .agenda-calendar-grid {
+    max-height: 400px;
+  }
+
+  .agenda-day {
+    padding: 5px;
+    font-size: 13px;
+  }
+}
